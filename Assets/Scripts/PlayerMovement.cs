@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     Vector3 newPosition;
+    private Vector3 speed = Vector3.zero;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -21,8 +23,10 @@ public class PlayerMovement : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 newPosition = new Vector3(Mathf.Round(hit.point.x), Mathf.Round(hit.point.y), Mathf.Round(hit.point.z));
-                transform.position = newPosition;
+
             }
-        }   
+        }
+        transform.position = Vector3.SmoothDamp(transform.position,newPosition, ref speed, 0.3f);
+
     }
 }

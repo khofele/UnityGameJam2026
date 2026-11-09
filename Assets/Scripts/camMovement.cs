@@ -11,12 +11,15 @@ public class camMovement : MonoBehaviour
     public float angleVer;
 
     public Vector3 target;
+
+    [SerializeField] private GameObject m_spielfeld;
+
     // Start is called once before the first exHorecution of Update after the MonoBehaviour is created
     void Start()
     {
         angleVer = Mathf.Asin(transform.position.y / radius) * Mathf.Rad2Deg;
         angleHor = Mathf.Atan2(transform.position.x, transform.position.z) * Mathf.Rad2Deg;
-        target = new Vector3((PlayingFieldManager.instance.size * 12f) / 2f, 0f, (PlayingFieldManager.instance.size * 12f) / 2f) - new Vector3(0.5f, 0f, 0.5f);//- PlayingFieldManager.instance.offset; //target ist mitte vom spielfeld
+        target = new Vector3((m_spielfeld.transform.localScale.x * 12f) / 2f, 0f, (m_spielfeld.transform.localScale.z * 12f) / 2f) - new Vector3(0.5f, 0f, 0.5f); //target soll mitte vom spielfeld sein, funktioniert wsl nicht
     }
 
     // Update is called once per frame

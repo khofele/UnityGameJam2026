@@ -44,22 +44,9 @@ public class Path
     public void AddNodeToPath(Node _node) { m_nodes.Add(_node); }
     public void ReversePath() { m_nodes.Reverse(); }
 }
-public class GraphManager : MonoBehaviour
+public class GraphManager : Manager<GraphManager>
 {
-    public static GraphManager instance;
     private Node [,] m_nodes;
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
     public void GenerateNodeGraph(int _size_x, int _size_y)
     {
         m_nodes = new Node[_size_x, _size_y];

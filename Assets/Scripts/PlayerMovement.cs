@@ -16,14 +16,14 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (Mouse.current.leftButton.wasPressedThisFrame)//lieber mit input action
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit))//über graph manager checken ob man da überhaupt hin kann oder ob's ein gegner ist per Layermask
             {
-                newPosition = new Vector3(Mathf.Round(hit.point.x), Mathf.Round(hit.point.y), Mathf.Round(hit.point.z));
-
+                newPosition = new Vector3(Mathf.RoundToInt(hit.point.x), Mathf.RoundToInt(hit.point.y), Mathf.RoundToInt(hit.point.z));//war Round()
+                Debug.Log(newPosition);
             }
         }
         transform.position = Vector3.SmoothDamp(transform.position,newPosition, ref speed, 0.3f);

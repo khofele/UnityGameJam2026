@@ -23,7 +23,6 @@ public class PlayerMovement : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 newPosition = new Vector3(Mathf.Round(hit.point.x), Mathf.Round(hit.point.y), Mathf.Round(hit.point.z));
-
             }
         }
         transform.position = Vector3.SmoothDamp(transform.position,newPosition, ref speed, 0.3f);

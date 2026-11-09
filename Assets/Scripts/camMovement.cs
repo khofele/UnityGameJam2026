@@ -5,54 +5,51 @@ using System.Collections;
 
 public class camMovement : MonoBehaviour
 {
-    public float angleHor = 0f;
-    public float radius = 10f;
-    public float rotation = 400f;
-    public float angleVer;
-    // Start is called once before the first exHorecution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private float m_angleHor = 0f;
+    [SerializeField] private float m_radius = 10f;
+    [SerializeField] private float m_rotation = 400f;
+    [SerializeField] private float m_angleVer = 0f;
+    
+    private void Start()
     {
-        angleVer = Mathf.Asin(transform.position.y / radius) * Mathf.Rad2Deg;
-        angleHor = Mathf.Atan2(transform.position.x, transform.position.z) * Mathf.Rad2Deg;
+        m_angleVer = Mathf.Asin(transform.position.y / m_radius) * Mathf.Rad2Deg;
+        m_angleHor = Mathf.Atan2(transform.position.x, transform.position.z) * Mathf.Rad2Deg;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
 
-        if (Keyboard.current.aKey.isPressed)
+        if (Keyboard.current.aKey.isPressed == true)
         {
-            angleHor += rotation * Time.deltaTime;
+            m_angleHor += m_rotation * Time.deltaTime;
         }
-        if (Keyboard.current.dKey.isPressed)
+        if (Keyboard.current.dKey.isPressed == true)
         {
-            angleHor -= rotation * Time.deltaTime;
+            m_angleHor -= m_rotation * Time.deltaTime;
         }
 
-         
 
-
-            if (Keyboard.current.wKey.isPressed)
+        if (Keyboard.current.wKey.isPressed == true)
+        {
+            if ((m_angleVer + m_rotation * Time.deltaTime) < 90 == true)
             {
-                if ((angleVer + rotation * Time.deltaTime) < 90)
-                {
-                    angleVer += rotation * Time.deltaTime;
-                }
-                
+                m_angleVer += m_rotation * Time.deltaTime;
             }
-            if (Keyboard.current.sKey.isPressed)
+                
+        }
+        if (Keyboard.current.sKey.isPressed == true)
+        {
+            if (m_angleVer - m_rotation * Time.deltaTime > 45)
             {
-                if (angleVer - rotation * Time.deltaTime > 45)
-                {
-                    angleVer -= rotation * Time.deltaTime;
-                }
-                
+                m_angleVer -= m_rotation * Time.deltaTime;
             }
+                
+        }
         
 
-        float x = radius * Mathf.Cos(angleVer * Mathf.Deg2Rad) * Mathf.Sin(angleHor * Mathf.Deg2Rad);
-        float y = radius * Mathf.Sin(angleVer * Mathf.Deg2Rad);
-        float z = radius * Mathf.Cos(angleVer * Mathf.Deg2Rad) * Mathf.Cos(angleHor * Mathf.Deg2Rad);
+        float x = m_radius * Mathf.Cos(m_angleVer * Mathf.Deg2Rad) * Mathf.Sin(m_angleHor * Mathf.Deg2Rad);
+        float y = m_radius * Mathf.Sin(m_angleVer * Mathf.Deg2Rad);
+        float z = m_radius * Mathf.Cos(m_angleVer * Mathf.Deg2Rad) * Mathf.Cos(m_angleHor * Mathf.Deg2Rad);
 
         
         transform.position = new Vector3(x, y, z);

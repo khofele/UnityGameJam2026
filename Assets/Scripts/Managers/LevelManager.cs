@@ -20,6 +20,7 @@ public class LevelManager : Manager<LevelManager>
     {
         // Setup
         m_roundCounter = 0;
+        //TODO Alle Entities in der szene finden und levelEntities (un-)geordnet hinzufügen??
         m_currentEntityIndex = 0;
 
         RollOutActionPoints();
@@ -76,6 +77,15 @@ public class LevelManager : Manager<LevelManager>
         {
             entity.RollOutActionPoints();
             // TODO do something special if action points == lucky number
+        }
+    }
+
+    private void Update()
+    {
+        float fTimeDelta = Time.deltaTime;
+        foreach (Entity entity in m_levelEntities)
+        {
+            entity.Tick(fTimeDelta);
         }
     }
 }

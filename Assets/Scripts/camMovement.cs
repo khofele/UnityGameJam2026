@@ -3,19 +3,18 @@ using UnityEngine.InputSystem;
 
 public class camMovement : MonoBehaviour
 {
+    public Vector3 Target;
     [SerializeField] private float m_angleHor = 0f;
     [SerializeField] private float m_radius = 10f;
     [SerializeField] private float m_rotation = 400f;
     [SerializeField] private float m_angleVer = 0f;
     [SerializeField] private GameObject m_spielfeld;
-    public Vector3 target;
-
-    private void Start()
+    
+    void Start()
     {
         m_angleVer = Mathf.Asin(transform.position.y / m_radius) * Mathf.Rad2Deg;
         m_angleHor = Mathf.Atan2(transform.position.x, transform.position.z) * Mathf.Rad2Deg;
-    
-        target = new Vector3((m_spielfeld.transform.localScale.x * 12f) / 2f, 0f, (m_spielfeld.transform.localScale.z * 12f) / 2f) - new Vector3(0.5f, 0f, 0.5f); //target soll mitte vom spielfeld sein, funktioniert wsl nicht
+        Target = new Vector3((m_spielfeld.transform.localScale.x * 12f) / 2f, 0f, (m_spielfeld.transform.localScale.z * 12f) / 2f) - new Vector3(0.5f, 0f, 0.5f); //target soll mitte vom spielfeld sein, funktioniert wsl nicht
     }
 
     private void Update()
@@ -54,8 +53,8 @@ public class camMovement : MonoBehaviour
         float z = m_radius * Mathf.Cos(m_angleVer * Mathf.Deg2Rad) * Mathf.Cos(m_angleHor * Mathf.Deg2Rad);
 
         
-        transform.position = new Vector3(x, y, z) + target;
-        transform.LookAt(target);//Vector3.zero
+        transform.position = new Vector3(x, y, z) + Target;
+        transform.LookAt(Target);//Vector3.zero
     }
 }
 //es w�r nice to have, wenn die Kamera bei einem steileren winkel auch weiter weg ist, oder FOV halt anpassen

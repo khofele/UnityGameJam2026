@@ -46,6 +46,7 @@ public abstract class Entity : MonoBehaviour
     private SteeringBehaviours m_currentBehaviour;
     public void Tick(float fTimeDelta)
     {
+        m_steering?.Tick(fTimeDelta);
         transform.position = m_kinematics.Position;
         transform.rotation = Quaternion.Euler(0f, m_kinematics.Rotation * Mathf.Rad2Deg, 0f);
     }

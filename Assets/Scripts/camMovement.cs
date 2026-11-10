@@ -1,7 +1,5 @@
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections;
 
 public class camMovement : MonoBehaviour
 {
@@ -9,14 +7,14 @@ public class camMovement : MonoBehaviour
     [SerializeField] private float m_radius = 10f;
     [SerializeField] private float m_rotation = 400f;
     [SerializeField] private float m_angleVer = 0f;
-    
+    [SerializeField] private GameObject m_spielfeld;
+    public Vector3 target;
+
     private void Start()
     {
         m_angleVer = Mathf.Asin(transform.position.y / m_radius) * Mathf.Rad2Deg;
         m_angleHor = Mathf.Atan2(transform.position.x, transform.position.z) * Mathf.Rad2Deg;
-    [SerializeField] private GameObject m_spielfeld;
-    public Vector3 target;
-
+    
         target = new Vector3((m_spielfeld.transform.localScale.x * 12f) / 2f, 0f, (m_spielfeld.transform.localScale.z * 12f) / 2f) - new Vector3(0.5f, 0f, 0.5f); //target soll mitte vom spielfeld sein, funktioniert wsl nicht
     }
 

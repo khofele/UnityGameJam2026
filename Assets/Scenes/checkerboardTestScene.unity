@@ -475,12 +475,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a8bd44401f03e14baca6c93764b0d48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  m_angleHor: 0
-  m_radius: 10
-  m_rotation: 400
-  m_angleVer: 0
-  m_spielfeld: {fileID: 0}
+  angleHor: 0
+  radius: 10
+  rotation: 400
+  angleVer: 0
   target: {x: 0, y: 0, z: 0}
+  m_spielfeld: {fileID: 1588060252}
 --- !u!1 &1588060252
 GameObject:
   m_ObjectHideFlags: 0

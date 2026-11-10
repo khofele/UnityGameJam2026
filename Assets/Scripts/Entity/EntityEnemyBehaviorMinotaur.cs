@@ -31,9 +31,7 @@ public class EntityEnemyBehaviorMinotaur : EntityEnemyBehavior
             {
                 moveAction = (EntityMoveAction)action;
 
-                // TODO implement FindPath
-                //List<Vector2Int> path = _entityEnemy.FindPath(_targetEntity.CurrentGridPosition);
-
+                //Graphmanagaer FindClosestNode für destinationTile
 
                 //EntityEnemyDecision decision = new EntityEnemyDecision(action, null, destinationTile);
                 //EntityActionContext actionContext = new EntityActionContext(_entityEnemy, null, destinationTile);

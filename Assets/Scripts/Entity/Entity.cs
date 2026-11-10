@@ -43,7 +43,7 @@ public abstract class Entity : MonoBehaviour
     //}
     private SteeringBehaviourKin m_steering;
     protected Kinematics m_kinematics;
-    private eSteeringBehaviour m_currentBehaviour;
+    private eSteeringBehaviour m_currentSteeringBehaviour;
 
     //Runde beenden -> GraphManager SetNodeStatus (m_currentNodePos, false)
     private Vector2 m_currentNodePos;
@@ -58,18 +58,20 @@ public abstract class Entity : MonoBehaviour
     }
     public void SetSteeringBehaviour(eSteeringBehaviour _newBehaviour, Path _path = null)
     {
-        m_currentBehaviour = _newBehaviour;
-        Debug.Log("Setting Steering Behaviour to " + m_currentBehaviour);
+        m_currentSteeringBehaviour = _newBehaviour;
+        Debug.Log("Setting Steering Behaviour to " + m_currentSteeringBehaviour);
 
-        switch (m_currentBehaviour)
+        switch (m_currentSteeringBehaviour)
         {
             case eSteeringBehaviour.None:
                 break;
             case eSteeringBehaviour.GrapplinghooksKin:
                 if (_path != null)
                 {
+                    if(_path.GetSize()>m_currentActionsPoints)
+                        _path = _path.CutPath(m_currentActionsPoints);
                     m_steering = new SBgrapplinghooksKin(_path); //oder statt new einen start/stop trigger setzen??
-                    m_currentNodePos = _path.GetNodeAt(_path.GetSize()-1).Position;
+                    m_currentNodePos = _path.GetNodeAt(_path.GetSize() - 1).Position;
                     m_prevNodePos = _path.GetNodeAt(_path.GetSize() - 2).Position;
                 }
                 else Debug.Log("Pfad ist null");

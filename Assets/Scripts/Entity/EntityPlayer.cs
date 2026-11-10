@@ -11,7 +11,7 @@ public class EntityPlayer : Entity
         }
     }
     protected override void OnTick(float fTimeDelta)
-    {
+    {//oder lieber an/ausschalten bei set SB, OnPause? ---> SB hat kein zugriff auf Entity
         if (m_kinematics.MoveVelo.sqrMagnitude < 0.1f)
             IsMoving = false;
         else

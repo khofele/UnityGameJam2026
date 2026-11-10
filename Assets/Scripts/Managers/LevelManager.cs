@@ -16,6 +16,9 @@ public class LevelManager : Manager<LevelManager>
         get { return m_levelEntities; }
     }
 
+    private Pfadfindungsalgorithmus m_pfadfindungsalgorithmus;
+    private Path m_path;
+
     private void Start()
     {
         // Setup
@@ -87,5 +90,23 @@ public class LevelManager : Manager<LevelManager>
         {
             entity.Tick(fTimeDelta);
         }
+    }
+    public void CalculateEntityMovePath(Entity _entity, Node _target)//weiß nicht wie gegner KI entscheiden wo hin
+    {
+        m_pfadfindungsalgorithmus = new A_Stern(GraphManager.Instance.FindClosestNode(_entity.transform.position));
+        m_path = m_pfadfindungsalgorithmus.ComputePath(_target);
+        if (_entity is EntityPlayer)
+        {
+            UIManager.Instance.HandleGroundClicked(m_path);
+        }
+        else
+        {
+            //TODO Logik für KI entscheidung
+            ConfirmEntityMove(_entity);
+        }
+    }
+    public void ConfirmEntityMove(Entity _entity)
+    {
+        _entity.SetSteeringBehaviour(eSteeringBehaviour.GrapplinghooksKin, m_path);
     }
 }

@@ -45,6 +45,15 @@ public class Path
     public void AddNodeToPath(Node _node) { m_nodes.Add(_node); }
     public void ReversePath() { m_nodes.Reverse(); }
     public Node GetNodeAt(int ind) { return  m_nodes[ind]; }
+
+    public Path CutPath(int _lenght)
+    {
+        if (m_nodes.Count <= _lenght)
+            return this;
+        int anzElementsToRemove = m_nodes.Count - _lenght;
+        m_nodes.RemoveRange(_lenght, anzElementsToRemove);
+        return this;
+    }
 }
 public class GraphManager : Manager<GraphManager>
 {
@@ -116,5 +125,13 @@ public class GraphManager : Manager<GraphManager>
     public Node FindClosestNode(Vector3 _pos)
     {
         return m_nodes[Mathf.RoundToInt(_pos.x), Mathf.RoundToInt(_pos.y)];
+    }
+    public Node GetNodeAt(int _x, int _y)
+    {
+        return m_nodes[_x, _y];
+    }
+    public bool CanMoveToPosition(Vector3 _pos)
+    {
+        return FindClosestNode(_pos).IsWalkable;
     }
 }

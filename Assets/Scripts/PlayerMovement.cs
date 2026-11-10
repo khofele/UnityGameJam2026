@@ -1,32 +1,95 @@
-using System.Collections;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+//!!!!!!!!!!!!!!!!!!!!!MenuBG Tag setzen!!!!!!!!!!!!!
+[RequireComponent(typeof(EntityPlayer))]
+public class PlayerMovement : MonoBehaviour 
 {
-    Vector3 newPosition;
-    private Vector3 speed = Vector3.zero;
+    //Ronja Code zum vergleichen
+
+    //Vector3 newPosition;
+    //private Vector3 speed = Vector3.zero;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        newPosition = transform.position;
-    }
+    //void Start()
+    //{
+    //    newPosition = transform.position;
+    //}
+
+
 
     // Update is called once per frame
-    void Update()
+    //void Update()
+    //{
+    //    if (Mouse.current.leftButton.wasPressedThisFrame)//lieber mit input action
+    //    {
+    //        RaycastHit hit;
+    //        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+    //        if (Physics.Raycast(ray, out hit))//�ber graph manager checken ob man da �berhaupt hin kann oder ob's ein gegner ist per Layermask
+    //        {
+    //            newPosition = new Vector3(Mathf.RoundToInt(hit.point.x), Mathf.RoundToInt(hit.point.y), Mathf.RoundToInt(hit.point.z));//war Round()
+    //            Debug.Log(newPosition);
+    //        }
+    //    }
+    //    transform.position = Vector3.SmoothDamp(transform.position,newPosition, ref speed, 0.3f);
+    //}
+    private CamMoveAndClick_Actions m_inputActions;
+    [SerializeField] private LayerMask m_clickableLayers;
+    private EntityPlayer m_playerEntity;
+    private List<RaycastResult> m_raycastResults = new List<RaycastResult>();
+    private void Awake()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)//lieber mit input action
+        m_inputActions = new CamMoveAndClick_Actions();
+        m_playerEntity = GetComponent<EntityPlayer>();
+    }
+
+    private void OnEnable()
+    {
+        m_inputActions.Enable();
+        m_inputActions.ClickActions.Click.performed += ClickPerformed;
+    }
+    private void OnDisable()
+    {
+        m_inputActions.Disable();
+        m_inputActions.ClickActions.Click.performed -= ClickPerformed;
+    }
+    private void ClickPerformed(InputAction.CallbackContext context)
+    {
+        Vector2 screenPos = m_inputActions.ClickActions.PointerPosition.ReadValue<Vector2>();
+        if (EventSystem.current.IsPointerOverGameObject())
         {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out hit))//�ber graph manager checken ob man da �berhaupt hin kann oder ob's ein gegner ist per Layermask
+            Debug.Log("UI angeklickt");
+            PointerEventData pointerEventData = new PointerEventData(EventSystem.current) { position = screenPos };
+            m_raycastResults.Clear();
+            EventSystem.current.RaycastAll(pointerEventData, m_raycastResults);
+            if (m_raycastResults.Count > 0 && m_raycastResults[0].gameObject.CompareTag("MenuBG"))//!!!!!!!!!!!!!!!!!!!!!MenuBG Tag setzen!!!!!!!!!!!!!
             {
-                newPosition = new Vector3(Mathf.RoundToInt(hit.point.x), Mathf.RoundToInt(hit.point.y), Mathf.RoundToInt(hit.point.z));//war Round()
-                Debug.Log(newPosition);
+                UIManager.Instance.CloseAllMenues();
+                Debug.Log("UI Background angeklickt");
             }
         }
-        transform.position = Vector3.SmoothDamp(transform.position,newPosition, ref speed, 0.3f);
-
+        else
+        {
+            Ray ray = Camera.main.ScreenPointToRay(screenPos);
+            if (Physics.Raycast(ray, out RaycastHit hit, 1000f, m_clickableLayers))
+            {
+                if(hit.collider.gameObject.TryGetComponent(out EntityEnemy ee))
+                {
+                    UIManager.Instance.HandleEnemyClicked(ee.gameObject);
+                }
+                else
+                {
+                    Vector3 clickPosition = new Vector3(Mathf.RoundToInt(hit.point.x), Mathf.RoundToInt(hit.point.y), Mathf.RoundToInt(hit.point.z));//war Round()
+                    //Debug.Log(newPosition);
+                    if (GraphManager.Instance.CanMoveToPosition(clickPosition))//out Node aber weiß nicht wie das programmiert wird
+                    {
+                        LevelManager.Instance.CalculateEntityMovePath(m_playerEntity, GraphManager.Instance.FindClosestNode(clickPosition));
+                    }
+                }
+            }
+        }
     }
 }

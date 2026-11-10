@@ -42,7 +42,7 @@ public class SBgrapplinghooksKin : SteeringBehaviourKin
             {
                 Debug.Log("Angekommen");
                 Pausieren();
-                return Vector3.zero;
+                return Vector3.zero; //damit velocity sicher 0 und IsMoving schaltet sich aus
                 //Drop Behaviour
                 //GraphManager sagen wo man steht, damit last Position blockiert wird
             }

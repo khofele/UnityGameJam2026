@@ -17,7 +17,7 @@ public class SBgrapplinghooksKin : SteeringBehaviourKin
     protected override Vector3 UpdateVelocity()
     {
         //throw new System.NotImplementedException();
-        Vector3 v = default;
+        Vector3 v = Vector3.zero;
 
         if (m_path == null || m_path.GetSize() == 0)
             return v;

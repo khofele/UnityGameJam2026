@@ -43,6 +43,7 @@ public class Path
     public int GetSize() { return m_nodes.Count; }
     public void AddNodeToPath(Node _node) { m_nodes.Add(_node); }
     public void ReversePath() { m_nodes.Reverse(); }
+    public Node GetNodeAt(int ind) { return  m_nodes[ind]; }
 }
 public class GraphManager : Manager<GraphManager>
 {

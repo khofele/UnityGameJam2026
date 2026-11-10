@@ -43,24 +43,24 @@ public abstract class Entity : MonoBehaviour
     //}
     private SteeringBehaviourKin m_steering;
     private Kinematics m_kinematics;
-    private SteeringBehaviour m_currentBehaviour;
+    private SteeringBehaviours m_currentBehaviour;
     public void Tick(float fTimeDelta)
     {
         transform.position = m_kinematics.Position;
         transform.rotation = Quaternion.Euler(0f, m_kinematics.Rotation * Mathf.Rad2Deg, 0f);
     }
-    public void SetSteeringBehaviour(SteeringBehaviour newBehaviour, Path path = null)
+    public void SetSteeringBehaviour(SteeringBehaviours newBehaviour, Path path = null)
     {
         m_currentBehaviour = newBehaviour;
         Debug.Log("Setting Steering Behaviour to " + m_currentBehaviour);
 
         switch (m_currentBehaviour)
         {
-            case SteeringBehaviour.None:
+            case SteeringBehaviours.None:
                 break;
-            case SteeringBehaviour.GrapplinghooksKin:
+            case SteeringBehaviours.GrapplinghooksKin:
                 if (path != null)
-                    m_steering = new SBgrapplinghooksKin(path);
+                    m_steering = new SBgrapplinghooksKin(path); //oder statt new einen start/stop trigger setzen
                 else Debug.Log("Pfad ist null");
                 break;
         }
@@ -68,4 +68,4 @@ public abstract class Entity : MonoBehaviour
         //Debug.Log(m_steering);
     }
 }
-public enum SteeringBehaviour { None, GrapplinghooksKin}
+public enum SteeringBehaviours { None, GrapplinghooksKin}

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,42 +6,31 @@ public class LevelManager : Manager<LevelManager>
     [Header("Level Setup")]
     [SerializeField] private List<Entity> m_levelEntities = null;
     [SerializeField] private int m_maxRoundCounter = 0;
-    [SerializeField] private int m_luckyNumber = 5; // TODO only temporary serializefield!! Choose FAVORITE number in main menu or somewhere else before start of the game
+    [SerializeField] private int m_luckyNumber = 5; // TODO only temporary serializefield!! Choose lucky number in main menu or somewhere else before start of the game
 
     private int m_roundCounter = 0;
     private int m_currentEntityIndex = 0;
-    private bool m_isPlayerTurn = false;
-    private Entity m_currentEntity = null;
 
     public List<Entity> LevelEntities
     {
         get { return m_levelEntities; }
     }
 
+    private Pfadfindungsalgorithmus m_pfadfindungsalgorithmus;
+    private Path m_path;
+
     private void Start()
     {
         // Setup
-        m_roundCounter = 1;
-        m_currentEntityIndex = 0;         //TODO Alle Entities in der szene finden und levelEntities (un-)geordnet hinzufÃ¼gen??
-
-        SubscribeEnemyEntities();
+        m_roundCounter = 0;
+        //TODO Alle Entities in der szene finden und levelEntities (un-)geordnet hinzufügen??
+        m_currentEntityIndex = 0;
 
         RollOutActionPoints();
         NextEntityTurn();
     }
 
-    private void SubscribeEnemyEntities()
-    {
-        foreach (Entity entity in m_levelEntities)
-        {
-            if (entity is EntityEnemy == true)
-            {
-                ((EntityEnemy)entity).OnEnemyKilled += HandleEnemyEntityKilled;
-            }
-        }
-    }
-
-    private void NextEntityTurn()
+    public void NextEntityTurn() // TODO Call on button press in level, was private
     {
         if(m_currentEntityIndex >= m_levelEntities.Count)
         {
@@ -52,21 +40,11 @@ public class LevelManager : Manager<LevelManager>
             NextRound();
         }
 
-        m_currentEntity = m_levelEntities[m_currentEntityIndex];
+        // TODO entity needs to execute actions until every action point is used
 
-        if(m_currentEntity is EntityPlayer == true)
-        {
-            m_isPlayerTurn = true;
-        }
-        else
-        {
-            m_isPlayerTurn = false;
-        }
+        Debug.Log("Current Entity " + m_currentEntityIndex);
 
         m_currentEntityIndex++;
-        HandleEntityTurnStart();
-
-        // TODO entity needs to execute actions until every action point is used
     }
 
     private void NextRound()
@@ -89,8 +67,8 @@ public class LevelManager : Manager<LevelManager>
         }
         else
         {
-            Debug.Log("---- Next round started --------------------------------------------------------------------------------------------------------");
-            Debug.Log("Roundcounter " + m_roundCounter);
+            Debug.Log("Next round started");
+
             RollOutActionPoints();
         }
     }
@@ -101,66 +79,8 @@ public class LevelManager : Manager<LevelManager>
         foreach(Entity entity in m_levelEntities)
         {
             entity.RollOutActionPoints();
-            Debug.Log(entity.name + " rolled AP: " + entity.CurrentActionPoints);
-            // TODO do something special if action points == lucky number --> fÃ¼r nÃ¤chste 3 Runden +1 AP
+            // TODO do something special if action points == lucky number
         }
-    }
-
-    // TODO Gamewon wenn alle Enemies tot auf Spielerseite --> abfragen ob nur noch spieler da
-    // TODO Healthpotion
-
-    private void HandleEntityTurnStart()
-    {
-        if(m_currentEntity.IsAlive == false)
-        {
-            NextEntityTurn();
-            return;
-        }
-
-        Debug.Log("Current Entity " + m_currentEntity.name);
-
-        // TODO wieder raus!!
-        // DEBUG
-        if(m_currentEntity is EntityPlayer)
-        {
-            ((EntityPlayer)m_currentEntity).ReduceActionPoints(m_currentEntity.CurrentActionPoints);
-        }
-        // DEBUG
-
-        if (m_currentEntity is EntityEnemy)
-        {
-            m_currentEntity.OnAllActionPointsUsed += HandleEntityTurnEnd;
-            ((EntityEnemy)m_currentEntity).StartEnemyTurn();
-        }
-        else if (m_currentEntity.CurrentActionPoints == 0)
-        {
-            InGameUIManager.Instance.EnableEndRoundButton();
-        }
-    }
-
-    private void HandleEntityTurnEnd()
-    {
-        m_currentEntity.OnAllActionPointsUsed -= HandleEntityTurnEnd;
-
-        NextEntityTurn();
-    }
-
-    private void HandleEnemyEntityKilled()
-    {
-        CheckWinCondition();
-    }
-
-    private void CheckWinCondition()
-    {
-        foreach(Entity entity in m_levelEntities)
-        {
-            if(entity is EntityEnemy == true && entity.IsAlive == true)
-            {
-                return;
-            }
-        }
-
-        GameManager.Instance.SetState(GameStates.GAMEWON);
     }
 
     private void Update()
@@ -171,17 +91,22 @@ public class LevelManager : Manager<LevelManager>
             entity.Tick(fTimeDelta);
         }
     }
-
-    public void HandlePlayerTurnEnd()
+    public void CalculateEntityMovePath(Entity _entity, Node _target)//weiß nicht wie gegner KI entscheiden wo hin
     {
-        if (m_isPlayerTurn == false || m_currentEntity.CurrentActionPoints > 0)
+        m_pfadfindungsalgorithmus = new A_Stern(GraphManager.Instance.FindClosestNode(_entity.transform.position));
+        m_path = m_pfadfindungsalgorithmus.ComputePath(_target);
+        if (_entity is EntityPlayer)
         {
-            return;
+            UIManager.Instance.HandleGroundClicked(m_path);
         }
-
-        m_isPlayerTurn = false;
-        InGameUIManager.Instance.DisableEndRoundButton();
-
-        NextEntityTurn();
+        else
+        {
+            //TODO Logik für KI entscheidung
+            ConfirmEntityMove(_entity);
+        }
+    }
+    public void ConfirmEntityMove(Entity _entity)
+    {
+        _entity.SetSteeringBehaviour(eSteeringBehaviour.GrapplinghooksKin, m_path);
     }
 }

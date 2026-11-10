@@ -1,0 +1,86 @@
+{
+    "version": 1,
+    "name": "CamMoveAndClick_Actions",
+    "maps": [
+        {
+            "name": "CameraMovement",
+            "id": "bf9b4436-726b-47f4-9a44-1206fc0150bf",
+            "actions": [
+                {
+                    "name": "WASD",
+                    "type": "Button",
+                    "id": "651700c0-feda-481f-b1d2-e434bd58cfb6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "47e0dbd3-1af2-4c19-8b42-8e152219deab",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WASD",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "ClickActions",
+            "id": "eeefc48e-0b76-4eb9-b302-20117b89a859",
+            "actions": [
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "fce6da16-929c-4090-a478-2cc4794dbc3a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "PointerPosition",
+                    "type": "Value",
+                    "id": "56a226b4-bb61-4407-bf97-7ecf7aa289d1",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "84a826bb-92db-46cd-95d6-5060299d6f05",
+                    "path": "<Pointer>/press",
+                    "interactions": "Tap",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "38bb1b05-a5c1-4855-92d3-b780e2b72bad",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

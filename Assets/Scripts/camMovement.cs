@@ -21,32 +21,32 @@ public class CamMovement : MonoBehaviour
         //m_target = _player.transform.position;
     }
 
-    public void Tick(float fTimeDelta)
+    private void Update()
     {
 
         if (Keyboard.current.aKey.isPressed == true)
         {
-            m_angleHor += m_rotation * fTimeDelta;
+            m_angleHor += m_rotation * Time.deltaTime;
         }
         if (Keyboard.current.dKey.isPressed == true)
         {
-            m_angleHor -= m_rotation * fTimeDelta;
+            m_angleHor -= m_rotation * Time.deltaTime;
         }
 
 
         if (Keyboard.current.wKey.isPressed == true)
         {
-            if ((m_angleVer + m_rotation * fTimeDelta) < 90 == true)
+            if ((m_angleVer + m_rotation * Time.deltaTime) < 90 == true)
             {
-                m_angleVer += m_rotation * fTimeDelta;
+                m_angleVer += m_rotation * Time.deltaTime;
             }
 
         }
         if (Keyboard.current.sKey.isPressed == true)
         {
-            if (m_angleVer - m_rotation * fTimeDelta > 45)
+            if (m_angleVer - m_rotation * Time.deltaTime > 45)
             {
-                m_angleVer -= m_rotation * fTimeDelta;
+                m_angleVer -= m_rotation * Time.deltaTime;
             }
 
         }

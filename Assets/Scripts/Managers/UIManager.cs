@@ -32,7 +32,7 @@ public class UIManager : Manager<UIManager>
         camMovement = new CamMovement();
         CloseAllMenues();
     }
-    private void CloseAllMenues()
+    public void CloseAllMenues()
     {
         m_pauseMenu.SetActive(false);
         m_pathMenu.SetActive(false);
@@ -80,10 +80,11 @@ public class UIManager : Manager<UIManager>
     {
         ToggleEndTurnButton(false);
         CloseAllMenues();
-        //LevelManager.Instance.NextEntityTurn();
+        LevelManager.Instance.NextEntityTurn();//mit Karo abgleichen
     }
     public void HandleEnemyClicked(GameObject _enemy)
     {
+        //TODO Daten aus _enemy auslesen und in text schreiben
         CloseAllMenues();
         OpenEnemyMenu();
     }
@@ -91,30 +92,29 @@ public class UIManager : Manager<UIManager>
     {
         if (_path != null)
         {
-            m_pathLenghtText.text = _path.GetSize().ToString();
+            m_pathLenghtText.text = "Distance: " + _path.GetSize().ToString();
             if (m_player.TryGetComponent(out EntityPlayer ep))
             {
-                if (ep.GetCurrentActionPoints() > _path.GetSize())
+                if (ep.GetCurrentActionPoints() < _path.GetSize())
                 {
+                    m_moveButton.GetComponentInChildren<TextMeshProUGUI>().color = Color.yellowGreen;
+                    m_pathLenghtWarningText.color = Color.red;
+                    m_pathLenghtText.color = Color.red;
                     m_pathLenghtWarningText.text = "You don't have enough action points to walk this far!";
                 }
                 else
                 {
+                    m_moveButton.GetComponentInChildren<TextMeshProUGUI>().color = Color.green;
+                    m_pathLenghtText.color = Color.green;
                     m_pathLenghtWarningText.text = "";
                 }
+                m_moveButton.onClick.RemoveAllListeners();
+                m_moveButton.onClick.AddListener(() =>
+                {
+                    LevelManager.Instance.ConfirmEntityMove(ep);
+                });
+                m_moveButton.interactable = !ep.IsMoving;
             }
-            //m_unitTypeText.text = unit.unitType.ToString();
-            //m_unitCountText.text = $"Members: {unit.CurrentMemberCount} / {unit.MaxMemberCount}";
-
-            //m_addMemberButton.interactable = !unit.m_isFull;
-            //m_addMemberButton.onClick.RemoveAllListeners();
-            //m_addMemberButton.onClick.AddListener(() =>
-            //{
-            //    unit.AddMember();
-            //    OpenUnitsMenu();
-            //});
-
-            //m_moveUnitButton.interactable = !unit.IsEmpty() && !unit.m_unitIsMoving;
         }
         CloseAllMenues();
         OpenPathMenu();

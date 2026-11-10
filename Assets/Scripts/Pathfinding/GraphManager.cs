@@ -50,7 +50,13 @@ public class GraphManager : Manager<GraphManager>
 {
     private Node [,] m_nodes;
     [SerializeField] private LayerMask m_layer;
-
+    [SerializeField] private GameObject m_spielfeld;
+    private void Start()
+    {
+        int sizeX = Mathf.RoundToInt(m_spielfeld.transform.localScale.x * 10);
+        int sizeY = Mathf.RoundToInt(m_spielfeld.transform.localScale.z * 10);
+        GenerateNodeGraph(sizeX, sizeY);
+    }
     public void GenerateNodeGraph(int _size_x, int _size_y)
     {
         m_nodes = new Node[_size_x, _size_y];

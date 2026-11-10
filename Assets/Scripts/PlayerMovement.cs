@@ -20,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out hit))//über graph manager checken ob man da überhaupt hin kann oder ob's ein gegner ist per Layermask
+            if (Physics.Raycast(ray, out hit))//ï¿½ber graph manager checken ob man da ï¿½berhaupt hin kann oder ob's ein gegner ist per Layermask
             {
                 newPosition = new Vector3(Mathf.RoundToInt(hit.point.x), Mathf.RoundToInt(hit.point.y), Mathf.RoundToInt(hit.point.z));//war Round()
                 Debug.Log(newPosition);

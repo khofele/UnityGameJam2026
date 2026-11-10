@@ -17,4 +17,8 @@ public class EntityPlayer : Entity
         else
             IsMoving = true;
     }
+    public int GetCurrentActionPoints()
+    {
+        return m_currentActionsPoints;
+    }
 }

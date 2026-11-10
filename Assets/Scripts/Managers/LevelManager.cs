@@ -27,7 +27,7 @@ public class LevelManager : Manager<LevelManager>
         NextEntityTurn();
     }
 
-    private void NextEntityTurn() // TODO Call on button press in level
+    public void NextEntityTurn() // TODO Call on button press in level, was private
     {
         if(m_currentEntityIndex >= m_levelEntities.Count)
         {

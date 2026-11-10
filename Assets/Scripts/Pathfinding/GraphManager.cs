@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 //public enum NodeZustand { free, blocked, lastPlayerPos}//auch für Bots?? -----> kann auch über einen bool steuern
 public struct Edge
@@ -48,6 +49,7 @@ public class Path
 public class GraphManager : Manager<GraphManager>
 {
     private Node [,] m_nodes;
+    [SerializeField] private LayerMask m_layer;
 
     public void GenerateNodeGraph(int _size_x, int _size_y)
     {
@@ -66,7 +68,7 @@ public class GraphManager : Manager<GraphManager>
             {
                 if (_x != 0)
                 {
-                    m_nodes[_x,_y].AddEdge(m_nodes[_x -1, _y]);//ggfs später edge cost anpassen, CalculateEdgeCost()
+                    m_nodes[_x, _y].AddEdge(m_nodes[_x - 1, _y]);//ggfs später edge cost anpassen, CalculateEdgeCost()
                 }
                 if (_y != 0)
                 {
@@ -87,11 +89,16 @@ public class GraphManager : Manager<GraphManager>
     {
         Node _newNode = new(new Vector2(_x,_y));
         m_nodes[_x, _y] = _newNode;
-        //TODO mit Raycast prüfen ob an (0,1,0) [_x,_y] ein objekt steht. also Layermask blockingObj oder so
-        //Dann ggfs Node Zustand auf blocked setzen also z.B.
-        //SetNodeZustand(_x, _y, NodeZustand.blocked);
+
+        //node nicht walkable setzten, falls objekt drüber
+        Vector3 von = new(_x, 0f, _y);
+        if (Physics.Raycast(von, Vector3.up, 0.1f, m_layer))
+        {
+            _newNode.IsWalkable = false;
+        }
     }
-    //wird einmal am anfang für alle geblockten Nodes aufgerufen, dann am rundenende von Spieler und Enemy.
+
+    //wird aufgerufen am rundenende von Spieler und Enemy.
     //Spieler und Enemy merken sich immer current position (also transform.position) und last position (das zuletzt benutzte Node/Feld)
     //So kann die zuletzt 'besuchte' Node gesperrt/entsperrt werden.
     public void SetNodeZustand(int _x, int _y, bool _IsWalkable) //NodeZustand _zustand
@@ -99,6 +106,7 @@ public class GraphManager : Manager<GraphManager>
         //m_nodes[_x, _y].Zustand = _zustand;//so oder so
         m_nodes[_x, _y].IsWalkable = _IsWalkable;
     }
+    public void SetNodeZustand(Vector2 _coords, bool _IsWalkable) { SetNodeZustand(Mathf.RoundToInt(_coords.x), Mathf.RoundToInt(_coords.y), _IsWalkable); }
     public Node FindClosestNode(Vector3 _pos)
     {
         return m_nodes[Mathf.RoundToInt(_pos.x), Mathf.RoundToInt(_pos.y)];

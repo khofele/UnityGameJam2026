@@ -42,26 +42,36 @@ public abstract class Entity : MonoBehaviour
     //    //Goto node, if reached, goto next node, if done stop else repeat
     //}
     private SteeringBehaviourKin m_steering;
-    private Kinematics m_kinematics;
-    private SteeringBehaviours m_currentBehaviour;
+    protected Kinematics m_kinematics;
+    private eSteeringBehaviour m_currentBehaviour;
+
+    //Runde beenden -> GraphManager SetNodeStatus (m_currentNodePos, false)
+    private Vector2 m_currentNodePos;
+    private Vector2 m_prevNodePos;
+
+    protected virtual void OnTick(float fTimeDelta) { }
     public void Tick(float fTimeDelta)
     {
         m_steering?.Tick(fTimeDelta);
-        transform.position = m_kinematics.Position;
-        transform.rotation = Quaternion.Euler(0f, m_kinematics.Rotation * Mathf.Rad2Deg, 0f);
+        transform.SetPositionAndRotation(m_kinematics.Position, Quaternion.Euler(0f, m_kinematics.Rotation * Mathf.Rad2Deg, 0f));
+        OnTick(fTimeDelta);
     }
-    public void SetSteeringBehaviour(SteeringBehaviours newBehaviour, Path path = null)
+    public void SetSteeringBehaviour(eSteeringBehaviour _newBehaviour, Path _path = null)
     {
-        m_currentBehaviour = newBehaviour;
+        m_currentBehaviour = _newBehaviour;
         Debug.Log("Setting Steering Behaviour to " + m_currentBehaviour);
 
         switch (m_currentBehaviour)
         {
-            case SteeringBehaviours.None:
+            case eSteeringBehaviour.None:
                 break;
-            case SteeringBehaviours.GrapplinghooksKin:
-                if (path != null)
-                    m_steering = new SBgrapplinghooksKin(path); //oder statt new einen start/stop trigger setzen
+            case eSteeringBehaviour.GrapplinghooksKin:
+                if (_path != null)
+                {
+                    m_steering = new SBgrapplinghooksKin(_path); //oder statt new einen start/stop trigger setzen??
+                    m_currentNodePos = _path.GetNodeAt(_path.GetSize()-1).Position;
+                    m_prevNodePos = _path.GetNodeAt(_path.GetSize() - 2).Position;
+                }
                 else Debug.Log("Pfad ist null");
                 break;
         }
@@ -69,4 +79,4 @@ public abstract class Entity : MonoBehaviour
         //Debug.Log(m_steering);
     }
 }
-public enum SteeringBehaviours { None, GrapplinghooksKin}
+public enum eSteeringBehaviour { None, GrapplinghooksKin}

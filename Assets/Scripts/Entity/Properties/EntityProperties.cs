@@ -21,7 +21,7 @@ public class EntityProperties : ScriptableObject
 
     public int MaxActionPoints
     {
-        get { return m_minActionPoints; }
+        get { return m_maxActionPoints; }
     }
 
     public float MaxHealth 

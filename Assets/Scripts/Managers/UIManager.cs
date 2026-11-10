@@ -80,7 +80,7 @@ public class UIManager : Manager<UIManager>
     {
         ToggleEndTurnButton(false);
         CloseAllMenues();
-        LevelManager.Instance.NextEntityTurn();
+        //LevelManager.Instance.NextEntityTurn();
     }
     public void HandleEnemyClicked(GameObject _enemy)
     {

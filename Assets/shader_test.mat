@@ -132,7 +132,7 @@ Material:
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     - _kevin: 1
-    - _sergei: 0.5
+    - _sergei: 0.446
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

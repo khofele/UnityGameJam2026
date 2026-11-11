@@ -1,10 +1,11 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : Manager<GameManager>
 {
-    [SerializeField] private LevelManager m_levelManager = null;
+    //[SerializeField] private LevelManager m_levelManager = null;
 
     private GameStates m_currentGameState = GameStates.PAUSED;
 
@@ -50,4 +51,24 @@ public class GameManager : Manager<GameManager>
             return;
         }
     }
+
+
+
+    //SceneManagement & Application
+    public void LoadScene(int sceneindex)
+    {
+        SceneManager.LoadScene(sceneindex);
+        DestroyOtherManagers();
+    }
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+    private void DestroyOtherManagers()
+    {
+        Destroy(UIManager.Instance.gameObject);
+        Destroy(GraphManager.Instance.gameObject);
+        Destroy(LevelManager.Instance.gameObject);
+    }
 }
+public enum Scenes { MainMenu, Tutorial ,Level1}

@@ -3,15 +3,14 @@ using UnityEngine;
 public class SBgrapplinghooksKin : SteeringBehaviourKin
 {
     private Path m_path = new();
-    private bool m_loop;
     [SerializeField] private float m_distanceReached = 0.1f;
     private int m_indexCurrentTarget = 1; //darf nicht 0 sein, später fixen
 
-    public SBgrapplinghooksKin(Path _path, bool _loop = false, int _indexCurrentTarget = 1)
+    public SBgrapplinghooksKin(Path _path, int _indexCurrentTarget = 1)
     {
         m_path = _path;
-        m_loop = _loop;
         m_indexCurrentTarget = _indexCurrentTarget;
+        Starten();
     }
 
     protected override Vector3 UpdateVelocity()

@@ -12,6 +12,11 @@ public class CamMovement : MonoBehaviour
     [SerializeField] private float m_angleVer = 0f;
     [SerializeField] private GameObject m_spielfeld;
 
+    [SerializeField] private InputActionReference camMov;
+    private Vector2 camVector;
+    
+
+
     private void Start()
     {
         //m_cam = Camera.main;
@@ -23,33 +28,18 @@ public class CamMovement : MonoBehaviour
 
     private void Update()
     {
+        camVector = camMov.action.ReadValue<Vector2>();
 
-        if (Keyboard.current.aKey.isPressed == true)
+        m_angleHor -= m_rotation * Time.deltaTime * camVector.x;
+        if (m_angleVer - m_rotation * Time.deltaTime > 45 && camVector.y < 0)
         {
-            m_angleHor += m_rotation * Time.deltaTime;
+            m_angleVer += m_rotation * Time.deltaTime * camVector.y;
         }
-        if (Keyboard.current.dKey.isPressed == true)
+        if (m_angleVer + m_rotation * Time.deltaTime < 90 && camVector.y > 0)
         {
-            m_angleHor -= m_rotation * Time.deltaTime;
+            m_angleVer += m_rotation * Time.deltaTime * camVector.y;
         }
 
-
-        if (Keyboard.current.wKey.isPressed == true)
-        {
-            if ((m_angleVer + m_rotation * Time.deltaTime) < 90 == true)
-            {
-                m_angleVer += m_rotation * Time.deltaTime;
-            }
-
-        }
-        if (Keyboard.current.sKey.isPressed == true)
-        {
-            if (m_angleVer - m_rotation * Time.deltaTime > 45)
-            {
-                m_angleVer -= m_rotation * Time.deltaTime;
-            }
-
-        }
 
         float x = m_radius * Mathf.Cos(m_angleVer * Mathf.Deg2Rad) * Mathf.Sin(m_angleHor * Mathf.Deg2Rad);
         float y = m_radius * Mathf.Sin(m_angleVer * Mathf.Deg2Rad);
@@ -59,6 +49,15 @@ public class CamMovement : MonoBehaviour
         transform.position = new Vector3(x, y, z) + m_player.transform.position;
         transform.LookAt(m_player.transform.position);//Vector3.zero
 
+    }
+
+    private void OnEnable()
+    {
+        camMov.action.Enable();
+    }
+    private void OnDisable()
+    {
+        camMov.action.Disable();
     }
 }
 //es w�r nice to have, wenn die Kamera bei einem steileren winkel auch weiter weg ist, oder FOV halt anpassen

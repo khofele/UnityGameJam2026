@@ -10,7 +10,8 @@ public abstract class Option// : MonoBehaviour
 
     private bool m_bReady = true;
 
-    //protected abstract void OnPause(); 
+    protected abstract void OnStart();
+    protected abstract void OnPause(); 
     protected abstract void OnTick(float fTimeDelta);
 
     public void Starten(float dauer = -1f, float cooldown = -1f)
@@ -22,7 +23,7 @@ public abstract class Option// : MonoBehaviour
         m_cooldown = cooldown;
         if (cooldown > 0f) m_bReady = false;
 
-        //OnStart();
+        OnStart();
 
         m_zustandVorher = CurrentZustand;
         CurrentZustand = Zustand.Gestartet;
@@ -50,7 +51,7 @@ public abstract class Option// : MonoBehaviour
         m_cooldown = cooldown;
         if (cooldown > 0f) m_bReady = false;
 
-        //OnPause();
+        OnPause();
 
         m_zustandVorher = CurrentZustand;
         CurrentZustand = Zustand.Pausiert;

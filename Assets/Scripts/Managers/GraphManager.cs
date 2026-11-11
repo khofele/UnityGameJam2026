@@ -58,7 +58,7 @@ public class Path
 public class GraphManager : Manager<GraphManager>
 {
     private Node [,] m_nodes;
-    [SerializeField] private LayerMask m_layer;
+    [SerializeField] private LayerMask m_blockingLayer;
     [SerializeField] private GameObject m_spielfeld;
     private void Start()
     {
@@ -77,9 +77,9 @@ public class GraphManager : Manager<GraphManager>
             }
         }
         //edges erst wenn alle nodes existieren
-        for (int _x = 0; _x < _size_x; ++_x)
+        for (int _x = 0; _x < _size_x -1; ++_x)
         {
-            for (int _y = 0; _y < _size_y; ++_y)
+            for (int _y = 0; _y < _size_y -1; ++_y)
             {
                 if (_x != 0)
                 {
@@ -107,7 +107,7 @@ public class GraphManager : Manager<GraphManager>
 
         //node nicht walkable setzten, falls objekt drüber
         Vector3 von = new(_x, 0f, _y);
-        if (Physics.Raycast(von, Vector3.up, 0.1f, m_layer))
+        if (Physics.Raycast(von, Vector3.up, 0.1f, m_blockingLayer))
         {
             _newNode.IsWalkable = false;
         }
@@ -124,7 +124,7 @@ public class GraphManager : Manager<GraphManager>
     public void SetNodeZustand(Vector2 _coords, bool _IsWalkable) { SetNodeZustand(Mathf.RoundToInt(_coords.x), Mathf.RoundToInt(_coords.y), _IsWalkable); }
     public Node FindClosestNode(Vector3 _pos)
     {
-        return m_nodes[Mathf.RoundToInt(_pos.x), Mathf.RoundToInt(_pos.y)];
+        return m_nodes[Mathf.RoundToInt(_pos.x), Mathf.RoundToInt(_pos.z)];//war _pos.y und ging deshalb nicht
     }
     public Node GetNodeAt(int _x, int _y)
     {

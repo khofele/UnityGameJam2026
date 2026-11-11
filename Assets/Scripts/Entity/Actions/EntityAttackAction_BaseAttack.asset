@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: EntityAttackAction_BaseAttack
   m_EditorClassIdentifier: Assembly-CSharp::EntityAttackAction
   m_actionName: 
-  m_actionPriority: 0
+  m_actionPriority: 1
   m_actionCost: 1
-  m_damage: 0
+  m_damage: 2

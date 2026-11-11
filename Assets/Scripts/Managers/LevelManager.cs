@@ -10,6 +10,8 @@ public class LevelManager : Manager<LevelManager>
 
     private int m_roundCounter = 0;
     private int m_currentEntityIndex = 0;
+    private bool m_isPlayerTurn = false;
+    private Entity m_currentEntity = null;
 
     public List<Entity> LevelEntities
     {
@@ -19,20 +21,38 @@ public class LevelManager : Manager<LevelManager>
     private Pfadfindungsalgorithmus m_pfadfindungsalgorithmus;
     private Path m_path;
 
+    public Path Path
+    {
+        get { return m_path; }
+    }
+
     private void Start()
     {
         // Setup
-        m_roundCounter = 0;
+        m_roundCounter = 1;
         //TODO Alle Entities in der szene finden und levelEntities (un-)geordnet hinzufügen??
         m_currentEntityIndex = 0;
+
+        SubscribeEnemyEntities();
 
         RollOutActionPoints();
         NextEntityTurn();
     }
 
-    public void NextEntityTurn() // TODO Call on button press in level, was private
+    private void SubscribeEnemyEntities()
     {
-        if(m_currentEntityIndex >= m_levelEntities.Count)
+        foreach (Entity entity in m_levelEntities)
+        {
+            if (entity is EntityEnemy == true)
+            {
+                ((EntityEnemy)entity).OnEnemyKilled += HandleEnemyEntityKilled;
+            }
+        }
+    }
+
+    public void NextEntityTurn()
+    {
+        if (m_currentEntityIndex >= m_levelEntities.Count)
         {
             m_roundCounter++;
             m_currentEntityIndex = 0;
@@ -40,22 +60,32 @@ public class LevelManager : Manager<LevelManager>
             NextRound();
         }
 
-        // TODO entity needs to execute actions until every action point is used
+        m_currentEntity = m_levelEntities[m_currentEntityIndex];
 
-        Debug.Log("Current Entity " + m_currentEntityIndex);
+        if (m_currentEntity is EntityPlayer == true)
+        {
+            m_isPlayerTurn = true;
+        }
+        else
+        {
+            m_isPlayerTurn = false;
+        }
 
         m_currentEntityIndex++;
+        HandleEntityTurnStart();
+
+        // TODO entity needs to execute actions until every action point is used
     }
 
     private void NextRound()
     {
-        if(m_roundCounter > m_maxRoundCounter)
+        if (m_roundCounter > m_maxRoundCounter)
         {
-            foreach(Entity entity in m_levelEntities)
+            foreach (Entity entity in m_levelEntities)
             {
-                if(entity is EntityEnemy == true)
+                if (entity is EntityEnemy == true)
                 {
-                    if(entity.CurrentHealth > 0.0f)
+                    if (entity.CurrentHealth > 0.0f)
                     {
                         GameManager.Instance.SetState(GameStates.GAMEOVER);
                         return;
@@ -67,8 +97,8 @@ public class LevelManager : Manager<LevelManager>
         }
         else
         {
-            Debug.Log("Next round started");
-
+            Debug.Log("---- Next round started --------------------------------------------------------------------------------------------------------");
+            Debug.Log("Roundcounter " + m_roundCounter);
             RollOutActionPoints();
         }
     }
@@ -79,7 +109,8 @@ public class LevelManager : Manager<LevelManager>
         foreach(Entity entity in m_levelEntities)
         {
             entity.RollOutActionPoints();
-            // TODO do something special if action points == lucky number
+            Debug.Log(entity.name + " rolled AP: " + entity.CurrentActionPoints);
+            // TODO do something special if action points == lucky number --> für nächste 3 Runden +1 AP
         }
     }
 
@@ -108,5 +139,75 @@ public class LevelManager : Manager<LevelManager>
     public void ConfirmEntityMove(Entity _entity)
     {
         _entity.SetSteeringBehaviour(eSteeringBehaviour.GrapplinghooksKin, m_path);
+    }
+
+    // TODO Gamewon wenn alle Enemies tot auf Spielerseite --> abfragen ob nur noch spieler da
+    // TODO Healthpotion
+
+    private void HandleEntityTurnStart()
+    {
+        if (m_currentEntity.IsAlive == false)
+        {
+            NextEntityTurn();
+            return;
+        }
+
+        Debug.Log("Current Entity " + m_currentEntity.name);
+
+        // TODO wieder raus!!
+        // DEBUG
+        if (m_currentEntity is EntityPlayer)
+        {
+            ((EntityPlayer)m_currentEntity).ReduceActionPoints(m_currentEntity.CurrentActionPoints);
+        }
+        // DEBUG
+
+        if (m_currentEntity is EntityEnemy)
+        {
+            m_currentEntity.OnAllActionPointsUsed += HandleEntityTurnEnd;
+            ((EntityEnemy)m_currentEntity).StartEnemyTurn();
+        }
+        else if (m_currentEntity.CurrentActionPoints == 0)
+        {
+            InGameUIManager.Instance.EnableEndRoundButton();
+        }
+    }
+
+    private void HandleEntityTurnEnd()
+    {
+        m_currentEntity.OnAllActionPointsUsed -= HandleEntityTurnEnd;
+
+        NextEntityTurn();
+    }
+
+    private void HandleEnemyEntityKilled()
+    {
+        CheckWinCondition();
+    }
+
+    private void CheckWinCondition()
+    {
+        foreach (Entity entity in m_levelEntities)
+        {
+            if (entity is EntityEnemy == true && entity.IsAlive == true)
+            {
+                return;
+            }
+        }
+
+        GameManager.Instance.SetState(GameStates.GAMEWON);
+    }
+
+    public void HandlePlayerTurnEnd()
+    {
+        if (m_isPlayerTurn == false || m_currentEntity.CurrentActionPoints > 0)
+        {
+            return;
+        }
+
+        m_isPlayerTurn = false;
+        InGameUIManager.Instance.DisableEndRoundButton();
+
+        NextEntityTurn();
     }
 }

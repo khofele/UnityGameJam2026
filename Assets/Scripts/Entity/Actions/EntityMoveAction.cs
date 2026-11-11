@@ -12,15 +12,21 @@ public class EntityMoveAction : EntityAction
 
     public override bool CanExecuteAction(EntityActionContext _actionContext)
     {
-        LevelManager.Instance.CalculateEntityMovePath(_actionContext.ExecutingEntity, GraphManager.Instance.FindClosestNode(_actionContext.TargetEntity.currentnodepos));
+        LevelManager.Instance.CalculateEntityMovePath(_actionContext.ExecutingEntity, GraphManager.Instance.FindClosestNode(_actionContext.TargetEntity.CurrentNodePos));
         // m_path aus Levelmanager --> braucht getter
-        // wenn Pfadcount > Aktionspunkte dann false
+        if(LevelManager.Instance.Path.GetSize() > _actionContext.ExecutingEntity.CurrentActionPoints)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
         // TODO CutPath wenn nicht genug Aktionspunkte und auch sonst keine andere Aktion möglich, dann halt so weit laufen wie geht
-        return true;
     }
 
     public override void ExecuteAction(EntityActionContext _actionContext)
     {
-        //TODO ConfirmEntityMove aus LevelManager
+        LevelManager.Instance.ConfirmEntityMove(_actionContext.ExecutingEntity);
     }
 }

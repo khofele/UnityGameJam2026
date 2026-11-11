@@ -1,21 +1,39 @@
+using System;
 using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
 {
     [SerializeField] private EntityProperties m_entityProperties = null;
-
+    private bool m_isEntitiesTurn = false; // TODO im Levelmanager setzen
+                                           // TODO Nodegraph resetten nach Ende der Runde
     protected float m_currentHealth = 0.0f;
     protected int m_currentActionsPoints = 0;
+    protected bool m_isAlive = true;
+
+    public event Action OnAllActionPointsUsed;
 
     public float CurrentHealth
     {
         get { return m_currentHealth; }
-        set { m_currentHealth = value; }
+    }
+    
+    public int CurrentActionPoints
+    {
+        get { return m_currentActionsPoints; }
     }
 
-    protected void Start()
+    public bool IsAlive
     {
-        // Entity Setup
+        get { return m_isAlive; }
+    }
+
+    public EntityProperties EntityProperties
+    {
+        get { return m_entityProperties; }
+    }
+
+    protected virtual void Awake()
+    {
         m_currentHealth = m_entityProperties.MaxHealth;
         m_currentActionsPoints = 0;
 
@@ -23,18 +41,26 @@ public abstract class Entity : MonoBehaviour
         m_kinematics = new();
         m_kinematics.Position = transform.position;
         m_kinematics.Rotation = transform.eulerAngles.y * Mathf.Deg2Rad;
+
+        m_currentNodePos = gameObject.transform.position;
     }
 
-    // TODO call on damage taken
-    public abstract void HandleHealthChange();
+    protected void TriggerOnAllActionPointsUsedEvent()
+    {
+        OnAllActionPointsUsed?.Invoke();
+    }
 
-    public int RollOutActionPoints()
+    public abstract void TakeDamage(float _damageValue);
+
+    public abstract void ReduceActionPoints(int _actionPoints);
+
+    public void RollOutActionPoints()
     {
         int actionPoints = 0;
 
-        actionPoints = Random.Range(m_entityProperties.MinActionPoints, m_entityProperties.MaxActionPoints);
+        actionPoints = UnityEngine.Random.Range(m_entityProperties.MinActionPoints, m_entityProperties.MaxActionPoints);
 
-        return actionPoints;
+        m_currentActionsPoints = actionPoints;
     }
 
     //public void TraversePath(Path path)   //doch lieber mit steering behaviour
@@ -48,6 +74,44 @@ public abstract class Entity : MonoBehaviour
     //Runde beenden -> GraphManager SetNodeStatus (m_currentNodePos, false)
     private Vector2 m_currentNodePos;
     private Vector2 m_prevNodePos;
+
+    public Vector2 CurrentNodePos
+    {
+        get { return m_currentNodePos; }
+    }
+
+    public bool CanExecuteAction(EntityAction _entityAction, EntityActionContext _actionContext)
+    {
+        if (_entityAction != null && m_currentActionsPoints >= _entityAction.ActionCost && _entityAction.CanExecuteAction(_actionContext))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool ExecuteAction(EntityAction _chosenAction, EntityActionContext _actionContext)
+    {
+        if (CanExecuteAction(_chosenAction, _actionContext) == false)
+        {
+            return false;
+        }
+
+        Debug.Log("Executing " + _chosenAction.name + " from " + gameObject.name);
+
+        _chosenAction.ExecuteAction(_actionContext);
+
+        ReduceActionPoints(_chosenAction.ActionCost);
+
+        return true;
+    }
+
+    public void TraversePath(Path path)   //doch lieber mit steering behaviour
+    {
+        //Goto node, if reached, goto next node, if done stop else repeat
+    }
 
     protected virtual void OnTick(float fTimeDelta) { }
     public void Tick(float fTimeDelta)

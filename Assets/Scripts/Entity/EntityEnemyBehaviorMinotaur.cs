@@ -31,14 +31,15 @@ public class EntityEnemyBehaviorMinotaur : EntityEnemyBehavior
             {
                 moveAction = (EntityMoveAction)action;
 
+                Node destinationNode = GraphManager.Instance.FindClosestNode(_entityEnemy.transform.position);
                 //Graphmanagaer FindClosestNode für destinationTile
 
-                //EntityEnemyDecision decision = new EntityEnemyDecision(action, null, destinationTile);
-                //EntityActionContext actionContext = new EntityActionContext(_entityEnemy, null, destinationTile);
+                EntityEnemyDecision decision = new EntityEnemyDecision(action, null, destinationNode);
+                EntityActionContext actionContext = new EntityActionContext(_entityEnemy, null, destinationNode);
 
-                //if(_entityEnemy.CanExecuteAction(action, actionContext) == true) {
-                //    availableDecisions.Add(decision);
-                //}
+                if(_entityEnemy.CanExecuteAction(action, actionContext) == true) {
+                    availableDecisions.Add(decision);
+                }
             }
         }
 

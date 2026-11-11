@@ -123,10 +123,15 @@ public class UIManager : Manager<UIManager>
                 {
                     LevelManager.Instance.ConfirmEntityMove(ep);
                 });
-                m_moveButton.interactable = !ep.IsMoving && (ep.GetCurrentActionPoints() > 0);
+                //m_moveButton.interactable = !ep.GetIsMoving() && (ep.GetCurrentActionPoints() > 0);
             }
         }
         CloseAllMenues();
         OpenPathMenu();
+    }
+
+    public void SetPlayerMoveButtonInteractable(bool _interactable)
+    {
+        m_moveButton.interactable = _interactable;
     }
 }

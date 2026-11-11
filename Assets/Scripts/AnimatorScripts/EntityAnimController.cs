@@ -1,10 +1,10 @@
 using UnityEngine;
 
 [RequireComponent (typeof(Animator))]
-public class GreenButtsAnimController : MonoBehaviour
+public class EntityAnimController : MonoBehaviour
 {
     private Animator m_animator;
-    private void Start()
+    private void Awake()
     {
         m_animator = GetComponent<Animator>();
     }

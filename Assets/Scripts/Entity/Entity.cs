@@ -1,5 +1,5 @@
 using UnityEngine;
-
+[RequireComponent (typeof(EntityAnimController))]
 public abstract class Entity : MonoBehaviour
 {
     [SerializeField] private EntityProperties m_entityProperties = null;
@@ -7,10 +7,17 @@ public abstract class Entity : MonoBehaviour
     protected float m_currentHealth = 0.0f;
     protected int m_currentActionsPoints = 0;
 
+    private EntityAnimController m_animController;
+
     public float CurrentHealth
     {
         get { return m_currentHealth; }
         set { m_currentHealth = value; }
+    }
+
+    private void Awake()
+    {
+        m_animController = GetComponent<EntityAnimController>();
     }
 
     protected void Start()
@@ -49,13 +56,18 @@ public abstract class Entity : MonoBehaviour
     private Vector2 m_currentNodePos;
     private Vector2 m_prevNodePos;
 
-    protected virtual void OnTick(float fTimeDelta) { }
+    //public bool IsMoving { get; private set; }
+    
+    //protected virtual void OnTick(float fTimeDelta) { }
     public void Tick(float fTimeDelta)
     {
         m_steering?.Tick(fTimeDelta);
         transform.SetPositionAndRotation(m_kinematics.Position, Quaternion.Euler(0f, m_kinematics.Rotation * Mathf.Rad2Deg, 0f));
-        OnTick(fTimeDelta);
     }
+    //public bool GetIsMoving()//brauche nicht mehr aber als Bsp für null-coalescing-operator
+    //{
+    //        return m_steering?.IsMoving ?? false;
+    //}
     public void SetSteeringBehaviour(eSteeringBehaviour _newBehaviour, Path _path = null)
     {
         m_currentSteeringBehaviour = _newBehaviour;
@@ -71,6 +83,7 @@ public abstract class Entity : MonoBehaviour
                     if(_path.GetSize()>m_currentActionsPoints + 1)
                         _path = _path.CutPath(m_currentActionsPoints);
                     m_steering = new SBgrapplinghooksKin(_path); //oder statt new einen start/stop trigger setzen??
+                    m_steering.OnMovementStateChanged += HandleMovementChange;
                     if (_path.GetSize() > 1)
                     {
                         if (_path.GetSize() == 2)
@@ -85,6 +98,16 @@ public abstract class Entity : MonoBehaviour
         }
         m_steering?.SetKinematic(m_kinematics);
         //Debug.Log(m_steering);
+    }
+    protected virtual void HandleMovementChange(bool _isMoving)
+    {
+        m_animController.SetMovementParameter(_isMoving);
+        if(_isMoving == false) m_steering.OnMovementStateChanged -= HandleMovementChange;
+    }
+    private void OnDisable()
+    {
+        if (m_steering != null)
+            m_steering.OnMovementStateChanged -= HandleMovementChange;
     }
 }
 public enum eSteeringBehaviour { None, GrapplinghooksKin}

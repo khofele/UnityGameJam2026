@@ -68,11 +68,17 @@ public abstract class Entity : MonoBehaviour
             case eSteeringBehaviour.GrapplinghooksKin:
                 if (_path != null)
                 {
-                    if(_path.GetSize()>m_currentActionsPoints)
+                    if(_path.GetSize()>m_currentActionsPoints + 1)
                         _path = _path.CutPath(m_currentActionsPoints);
                     m_steering = new SBgrapplinghooksKin(_path); //oder statt new einen start/stop trigger setzen??
-                    m_currentNodePos = _path.GetNodeAt(_path.GetSize() - 1).Position;
-                    m_prevNodePos = _path.GetNodeAt(_path.GetSize() - 2).Position;
+                    if (_path.GetSize() > 1)
+                    {
+                        if (_path.GetSize() == 2)
+                            m_prevNodePos = m_currentNodePos;
+                        else
+                            m_prevNodePos = _path.GetNodeAt(_path.GetSize() - 2).Position;
+                        m_currentNodePos = _path.GetNodeAt(_path.GetSize() - 1).Position;//path hat länge 0
+                    }
                 }
                 else Debug.Log("Pfad ist null");
                 break;

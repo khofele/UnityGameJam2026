@@ -93,8 +93,10 @@ public class LevelManager : Manager<LevelManager>
     }
     public void CalculateEntityMovePath(Entity _entity, Node _target)//weiﬂ nicht wie gegner KI entscheiden wo hin
     {
+        Debug.Log("Berechne Pfad von " + GraphManager.Instance.FindClosestNode(_entity.transform.position).Position + " nach " + _target.Position);
         m_pfadfindungsalgorithmus = new A_Stern(GraphManager.Instance.FindClosestNode(_entity.transform.position));
         m_path = m_pfadfindungsalgorithmus.ComputePath(_target);
+        Debug.Log("Pfad mit A* berechnet! L‰nge: " +  m_path.GetSize());
         if (_entity is EntityPlayer)
         {
             UIManager.Instance.HandleGroundClicked(m_path);

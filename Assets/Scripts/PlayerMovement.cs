@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 //!!!!!!!!!!!!!!!!!!!!!MenuBG Tag setzen!!!!!!!!!!!!!
 [RequireComponent(typeof(EntityPlayer))]
-public class PlayerMovement : MonoBehaviour 
+public class PlayerMovement : MonoBehaviour
 {
     //Ronja Code zum vergleichen
 
@@ -40,6 +40,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask m_clickableLayers;
     private EntityPlayer m_playerEntity;
     private List<RaycastResult> m_raycastResults = new List<RaycastResult>();
+    Vector2 m_screenPos;
+    bool m_screenClicked = false;
     private void Awake()
     {
         m_inputActions = new CamMoveAndClick_Actions();
@@ -58,35 +60,44 @@ public class PlayerMovement : MonoBehaviour
     }
     private void ClickPerformed(InputAction.CallbackContext context)
     {
-        Vector2 screenPos = m_inputActions.ClickActions.PointerPosition.ReadValue<Vector2>();
-        if (EventSystem.current.IsPointerOverGameObject())
+        m_screenPos = m_inputActions.ClickActions.PointerPosition.ReadValue<Vector2>();
+        m_screenClicked = true;
+    }
+    private void Update()
+    {
+        if (m_screenClicked)
         {
-            Debug.Log("UI angeklickt");
-            PointerEventData pointerEventData = new PointerEventData(EventSystem.current) { position = screenPos };
-            m_raycastResults.Clear();
-            EventSystem.current.RaycastAll(pointerEventData, m_raycastResults);
-            if (m_raycastResults.Count > 0 && m_raycastResults[0].gameObject.CompareTag("MenuBG"))//!!!!!!!!!!!!!!!!!!!!!MenuBG Tag setzen!!!!!!!!!!!!!
+            m_screenClicked = false;
+            if (EventSystem.current.IsPointerOverGameObject())
             {
-                UIManager.Instance.CloseAllMenues();
-                Debug.Log("UI Background angeklickt");
-            }
-        }
-        else
-        {
-            Ray ray = Camera.main.ScreenPointToRay(screenPos);
-            if (Physics.Raycast(ray, out RaycastHit hit, 1000f, m_clickableLayers))
-            {
-                if(hit.collider.gameObject.TryGetComponent(out EntityEnemy ee))
+                Debug.Log("UI angeklickt");
+                PointerEventData pointerEventData = new PointerEventData(EventSystem.current) { position = m_screenPos };
+                m_raycastResults.Clear();
+                EventSystem.current.RaycastAll(pointerEventData, m_raycastResults);
+                if (m_raycastResults.Count > 0 && m_raycastResults[0].gameObject.CompareTag("MenuBG"))//!!!!!!!!!!!!!!!!!!!!!MenuBG Tag setzen!!!!!!!!!!!!!
                 {
-                    UIManager.Instance.HandleEnemyClicked(ee.gameObject);
+                    UIManager.Instance.CloseAllMenues();
+                    Debug.Log("UI Background angeklickt");
                 }
-                else
+            }
+            else
+            {
+                Ray ray = Camera.main.ScreenPointToRay(m_screenPos);
+                if (Physics.Raycast(ray, out RaycastHit hit, 1000f, m_clickableLayers))
                 {
-                    Vector3 clickPosition = new Vector3(Mathf.RoundToInt(hit.point.x), Mathf.RoundToInt(hit.point.y), Mathf.RoundToInt(hit.point.z));//war Round()
-                    //Debug.Log(newPosition);
-                    if (GraphManager.Instance.CanMoveToPosition(clickPosition))//out Node aber weiß nicht wie das programmiert wird
+                    if (hit.collider.gameObject.TryGetComponent(out EntityEnemy ee))
                     {
-                        LevelManager.Instance.CalculateEntityMovePath(m_playerEntity, GraphManager.Instance.FindClosestNode(clickPosition));
+                        UIManager.Instance.HandleEnemyClicked(ee.gameObject);
+                    }
+                    else
+                    {
+                        Vector3 clickPosition = new Vector3(Mathf.RoundToInt(hit.point.x), Mathf.RoundToInt(hit.point.y), Mathf.RoundToInt(hit.point.z));//war Round()
+                        Debug.Log(clickPosition + " angeklickt");
+                        if (GraphManager.Instance.CanMoveToPosition(clickPosition))//out Node wär cool aber weiß nicht wie das programmiert wird
+                        {
+                            Debug.Log("Naechste Node dazu: " + GraphManager.Instance.FindClosestNode(clickPosition).Position);
+                            LevelManager.Instance.CalculateEntityMovePath(m_playerEntity, GraphManager.Instance.FindClosestNode(clickPosition));
+                        }
                     }
                 }
             }

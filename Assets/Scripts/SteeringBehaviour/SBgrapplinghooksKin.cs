@@ -27,7 +27,8 @@ public class SBgrapplinghooksKin : SteeringBehaviourKin
         Vector2 targetPos = m_target;
         targetPos.y = 0;
 
-        float sqrDistance = (currentPos - targetPos).sqrMagnitude;
+        float sqrDistance = (targetPos - currentPos).sqrMagnitude;
+        //TODO Debug.Log("Hallo " + sqrDistance);
         float sqrDistanceReached = m_distanceReached * m_distanceReached;
         //Debug.Log($"Index: {m_indexCurrentTarget} | Distanz: {sqrDistance / sqrDistanceReached}");
         if (sqrDistance < sqrDistanceReached)
@@ -46,7 +47,7 @@ public class SBgrapplinghooksKin : SteeringBehaviourKin
                 //GraphManager sagen wo man steht, damit last Position blockiert wird
             }
         }
-        v = (m_target - m_kinematics.Position);
+        v = (m_kinematics.Position - m_target);
         if (v != Vector2.zero)
         {
             v = v.normalized * m_kinematics.MaxMoveVelo;

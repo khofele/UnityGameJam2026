@@ -12,21 +12,16 @@ public class EntityAttackAction : EntityAction
 
     public override bool CanExecuteAction(EntityActionContext _actionContext)
     {
-        //if (_actionContext.TargetEntity == null)
-        //{
-        //    return false;
-        //}
+        int distance = Mathf.Abs(Mathf.RoundToInt(_actionContext.ExecutingEntity.CurrentNodePos.x - _actionContext.TargetEntity.CurrentNodePos.x)) + Mathf.Abs(Mathf.RoundToInt(_actionContext.ExecutingEntity.CurrentNodePos.y - _actionContext.TargetEntity.CurrentNodePos.y));
 
-        //int tileDistance = _actionContext.ExecutingEntity.GetTileDistance(_actionContext.TargetEntity);
-
-        //if (tileDistance == 1)
-        //{
-        //    return true;
-        //}
-        //else
-        //{
+        if(distance == 1)
+        {
             return true;
-        //TODO}
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public override void ExecuteAction(EntityActionContext _actionContext)

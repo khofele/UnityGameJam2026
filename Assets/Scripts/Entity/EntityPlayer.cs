@@ -2,18 +2,30 @@ using UnityEngine;
 
 public class EntityPlayer : Entity
 {
-    
-    public override void HandleHealthChange()
+    public override void ReduceActionPoints(int _actionPoints)
     {
-        if(m_currentHealth <= 0.0f)
+        if ((m_currentActionsPoints - _actionPoints) >= 0)
         {
+            m_currentActionsPoints -= _actionPoints;
+        }
+
+        if (m_currentActionsPoints == 0)
+        {
+            InGameUIManager.Instance.EnableEndRoundButton();
+        }
+    }
+
+    public override void TakeDamage(float _damageValue)
+    {
+        m_currentHealth -= _damageValue;
+
+        if (m_currentHealth <= 0.0f)
+        {
+            m_isAlive = false;
             GameManager.Instance.SetState(GameStates.GAMEOVER);
         }
     }
-    public int GetCurrentActionPoints()
-    {
-        return m_currentActionsPoints;
-    }
+
     protected override void HandleMovementChange(bool _isMoving)
     {
         base.HandleMovementChange(_isMoving);

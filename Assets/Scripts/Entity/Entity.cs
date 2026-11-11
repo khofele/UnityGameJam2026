@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 [RequireComponent (typeof(EntityAnimController))]
 public abstract class Entity : MonoBehaviour
@@ -6,8 +7,13 @@ public abstract class Entity : MonoBehaviour
 
     protected float m_currentHealth = 0.0f;
     protected int m_currentActionsPoints = 0;
+    protected bool m_isAlive = true;
 
     private EntityAnimController m_animController;
+    private bool m_isEntitiesTurn = false; // TODO im Levelmanager setzen
+                                           // TODO Nodegraph resetten nach Ende der Runde
+
+    public event Action OnAllActionPointsUsed;
 
     public float CurrentHealth
     {
@@ -15,13 +21,25 @@ public abstract class Entity : MonoBehaviour
         set { m_currentHealth = value; }
     }
 
+    public bool IsAlive
+    {
+        get { return m_isAlive; }
+    }
+
+    public int CurrentActionPoints
+    {
+        get { return m_currentActionsPoints; }
+    }
+
+    public EntityProperties EntityProperties
+    {
+        get { return m_entityProperties; }
+    }
+
     private void Awake()
     {
         m_animController = GetComponent<EntityAnimController>();
-    }
 
-    protected void Start()
-    {
         // Entity Setup
         m_currentHealth = m_entityProperties.MaxHealth;
         m_currentActionsPoints = 0;
@@ -30,18 +48,26 @@ public abstract class Entity : MonoBehaviour
         m_kinematics = new();
         m_kinematics.Position = transform.position;
         m_kinematics.Rotation = transform.eulerAngles.y * Mathf.Deg2Rad;
+
+        m_currentNodePos = gameObject.transform.position;
     }
 
-    // TODO call on damage taken
-    public abstract void HandleHealthChange();
+    protected void TriggerOnAllActionPointsUsedEvent()
+    {
+        OnAllActionPointsUsed?.Invoke();
+    }
 
-    public int RollOutActionPoints()
+    public abstract void TakeDamage(float _damageValue);
+
+    public abstract void ReduceActionPoints(int _actionPoints);
+
+    public void RollOutActionPoints()
     {
         int actionPoints = 0;
 
-        actionPoints = Random.Range(m_entityProperties.MinActionPoints, m_entityProperties.MaxActionPoints);
+        actionPoints = UnityEngine.Random.Range(m_entityProperties.MinActionPoints, m_entityProperties.MaxActionPoints);
 
-        return actionPoints;
+        m_currentActionsPoints = actionPoints;
     }
 
     //public void TraversePath(Path path)   //doch lieber mit steering behaviour
@@ -56,8 +82,13 @@ public abstract class Entity : MonoBehaviour
     private Vector2 m_currentNodePos;
     private Vector2 m_prevNodePos;
 
+    public Vector2 CurrentNodePos
+    {
+        get { return m_currentNodePos; }
+    }
+
     //public bool IsMoving { get; private set; }
-    
+
     //protected virtual void OnTick(float fTimeDelta) { }
     public void Tick(float fTimeDelta)
     {
@@ -108,6 +139,34 @@ public abstract class Entity : MonoBehaviour
     {
         if (m_steering != null)
             m_steering.OnMovementStateChanged -= HandleMovementChange;
+    }
+
+    public bool CanExecuteAction(EntityAction _entityAction, EntityActionContext _actionContext)
+    {
+        if (_entityAction != null && m_currentActionsPoints >= _entityAction.ActionCost && _entityAction.CanExecuteAction(_actionContext))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool ExecuteAction(EntityAction _chosenAction, EntityActionContext _actionContext)
+    {
+        if (CanExecuteAction(_chosenAction, _actionContext) == false)
+        {
+            return false;
+        }
+
+        Debug.Log("Executing " + _chosenAction.name + " from " + gameObject.name);
+
+        _chosenAction.ExecuteAction(_actionContext);
+
+        ReduceActionPoints(_chosenAction.ActionCost);
+
+        return true;
     }
 }
 public enum eSteeringBehaviour { None, GrapplinghooksKin}

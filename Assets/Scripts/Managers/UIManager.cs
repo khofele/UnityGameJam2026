@@ -104,8 +104,8 @@ public class UIManager : Manager<UIManager>
             m_pathLenghtText.text = "Distance: " + _path.GetSize().ToString();
             if (m_player.TryGetComponent(out EntityPlayer ep))
             {
-                m_playerPathCurrentActionPointsText.text = "Anzahl AP: " + ep.GetCurrentActionPoints().ToString();
-                if (ep.GetCurrentActionPoints() +1 < _path.GetSize())
+                m_playerPathCurrentActionPointsText.text = "Anzahl AP: " + ep.CurrentActionPoints.ToString();
+                if (ep.CurrentActionPoints +1 < _path.GetSize())
                 {
                     m_moveButton.GetComponentInChildren<TextMeshProUGUI>().color = Color.yellowGreen;
                     m_pathLenghtWarningText.color = Color.red;

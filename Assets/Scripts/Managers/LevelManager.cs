@@ -156,7 +156,6 @@ public class LevelManager : Manager<LevelManager>
 
         Debug.Log("Current Entity " + m_currentEntity.name);
 
-        // TODO wieder raus!!
         // DEBUG
         if (m_currentEntity is EntityPlayer)
         {

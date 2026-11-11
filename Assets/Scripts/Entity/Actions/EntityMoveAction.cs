@@ -12,17 +12,33 @@ public class EntityMoveAction : EntityAction
 
     public override bool CanExecuteAction(EntityActionContext _actionContext)
     {
-        LevelManager.Instance.CalculateEntityMovePath(_actionContext.ExecutingEntity, GraphManager.Instance.FindClosestNode(_actionContext.TargetEntity.CurrentNodePos));
-        // m_path aus Levelmanager --> braucht getter
-        if(LevelManager.Instance.Path.GetSize() > _actionContext.ExecutingEntity.CurrentActionPoints)
+        if (_actionContext.TargetEntity == null)
         {
             return false;
         }
-        else
+
+        Vector2 targetPosition = _actionContext.TargetEntity.CurrentNodePos;
+        //Node targetNode = GraphManager.Instance.GetNodeAt(Mathf.RoundToInt(targetPosition.x), Mathf.RoundToInt(targetPosition.y));
+        Node targetNode = GraphManager.Instance.FindClosestNode(_actionContext.TargetEntity.transform.position);
+
+        LevelManager.Instance.CalculateEntityMovePath(_actionContext.ExecutingEntity, targetNode);
+
+        if (LevelManager.Instance.Path == null || LevelManager.Instance.Path.GetSize() < 3)
+        {
+            return false;
+        }
+
+        int maxPathSize = Mathf.Min(LevelManager.Instance.Path.GetSize() - 1, _actionContext.ExecutingEntity.CurrentActionPoints + 1);
+        LevelManager.Instance.Path.CutPath(maxPathSize);
+
+        if(LevelManager.Instance.Path.GetSize() > 1)
         {
             return true;
         }
-        // TODO CutPath wenn nicht genug Aktionspunkte und auch sonst keine andere Aktion möglich, dann halt so weit laufen wie geht
+        else
+        {
+            return false;
+        }
     }
 
     public override void ExecuteAction(EntityActionContext _actionContext)

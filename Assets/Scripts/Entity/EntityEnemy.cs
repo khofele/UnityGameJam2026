@@ -23,7 +23,7 @@ public class EntityEnemy : Entity
 
             EntityActionContext actionContext = new EntityActionContext(this, decision.TargetEntity, decision.ActionDestinationNode);
 
-            bool isActionSuccessful = ExecuteAction(decision.ChosenAction, actionContext);
+            bool isActionSuccessful = ExecuteAction(decision.ChosenAction, actionContext); // TODO wenn Moveaction muss successful erst kommen wenn angekommen
 
             if (isActionSuccessful == false)
             {
@@ -45,6 +45,8 @@ public class EntityEnemy : Entity
         {
             m_currentActionsPoints -= _actionPoints;
         }
+
+        Debug.Log(gameObject.name + " Remaining AP " + m_currentActionsPoints);
     }
 
     public override void TakeDamage(float _damageValue)

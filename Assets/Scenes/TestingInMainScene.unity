@@ -2392,6 +2392,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4974453417490328151, guid: 61801d84b5d5d384bbfab321974773ca, type: 3}
+      propertyPath: m_enemyBehavior
+      value: 
+      objectReference: {fileID: 11400000, guid: f8d0ba78361fb7c4c8862760c7daf8ef, type: 2}
+    - target: {fileID: 4974453417490328151, guid: 61801d84b5d5d384bbfab321974773ca, type: 3}
+      propertyPath: m_playerEntityTarget
+      value: 
+      objectReference: {fileID: 1445682371}
     - target: {fileID: 7951400705999058947, guid: 61801d84b5d5d384bbfab321974773ca, type: 3}
       propertyPath: m_Name
       value: GreenButts
@@ -4903,6 +4911,7 @@ MonoBehaviour:
   m_rotation: 400
   m_angleVer: 0
   m_spielfeld: {fileID: 4794779277092728819}
+  camMov: {fileID: -3195837859317867427, guid: d6fb5ce46497b8d418ef3a8555bc0d12, type: 3}
 --- !u!1001 &643475711
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9067,6 +9076,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4974453417490328151, guid: 61801d84b5d5d384bbfab321974773ca, type: 3}
+      propertyPath: m_enemyBehavior
+      value: 
+      objectReference: {fileID: 11400000, guid: f8d0ba78361fb7c4c8862760c7daf8ef, type: 2}
+    - target: {fileID: 4974453417490328151, guid: 61801d84b5d5d384bbfab321974773ca, type: 3}
+      propertyPath: m_playerEntityTarget
+      value: 
+      objectReference: {fileID: 1445682371}
     - target: {fileID: 7951400705999058947, guid: 61801d84b5d5d384bbfab321974773ca, type: 3}
       propertyPath: m_Name
       value: GreenButts (1)

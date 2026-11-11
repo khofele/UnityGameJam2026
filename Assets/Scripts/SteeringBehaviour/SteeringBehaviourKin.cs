@@ -1,10 +1,11 @@
 using UnityEngine;
-using static Option;
 
 public abstract class SteeringBehaviourKin : Option
 {
     protected Kinematics m_kinematics;
     protected Vector3 m_target;
+
+    public event System.Action<bool> OnMovementStateChanged;
 
     public void SetKinematic(Kinematics kinematics)
     {
@@ -43,5 +44,13 @@ public abstract class SteeringBehaviourKin : Option
         m_kinematics.Rotation += m_kinematics.RotVelo * fTimeDelta;
 
         m_kinematics.Rotation = Mathf.Repeat(m_kinematics.Rotation + Mathf.PI, Mathf.PI * 2f) - Mathf.PI;
+    }
+    protected override void OnPause()
+    {
+        OnMovementStateChanged?.Invoke(false);
+    }
+    protected override void OnStart()
+    {
+        OnMovementStateChanged?.Invoke(true);
     }
 }

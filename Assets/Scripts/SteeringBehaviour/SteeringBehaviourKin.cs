@@ -3,7 +3,7 @@ using UnityEngine;
 public abstract class SteeringBehaviourKin : Option
 {
     protected Kinematics m_kinematics;
-    protected Vector3 m_target;
+    protected Vector2 m_target;
 
     public event System.Action<bool> OnMovementStateChanged;
 

@@ -128,6 +128,7 @@ public abstract class Entity : MonoBehaviour
                 break;
         }
         m_steering?.SetKinematic(m_kinematics);
+        m_steering?.Starten();
         //Debug.Log(m_steering);
     }
     protected virtual void HandleMovementChange(bool _isMoving)

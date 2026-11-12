@@ -1379,77 +1379,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 354874204477911337, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_fontColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 354874204477911337, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_fontColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 354874204477911337, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_fontColor.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 354874204477911337, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 4278190080
-      objectReference: {fileID: 0}
-    - target: {fileID: 354874204477911337, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_TextStyleHashCode
-      value: -1183493901
-      objectReference: {fileID: 0}
-    - target: {fileID: 754070181734230458, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 763655575550229666, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 918289528555709393, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_Name
-      value: PlayerPathCurrentActionPointsText
-      objectReference: {fileID: 0}
     - target: {fileID: 990302814751491137, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
       propertyPath: m_Name
       value: MenuUICanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 990302814751491137, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1233286846006336271, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_fontColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1233286846006336271, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_fontColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1233286846006336271, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_fontColor.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1233286846006336271, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 4278190080
       objectReference: {fileID: 0}
     - target: {fileID: 5785585630764624911, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
       propertyPath: m_player
       value: 
       objectReference: {fileID: 1445682369}
     - target: {fileID: 5785585630764624911, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_playerPathCurrentActionPointsText
+      propertyPath: m_kevinMin
+      value: 0.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 5785585630764624911, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
+      propertyPath: m_playingField
       value: 
-      objectReference: {fileID: 190331815}
+      objectReference: {fileID: 4794779277092728819}
     - target: {fileID: 6055000806060789459, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7071969026971328103, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 7496730958523760617, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
       propertyPath: m_Pivot.x
@@ -1536,17 +1484,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
---- !u!114 &190331815 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 354874204477911337, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-  m_PrefabInstance: {fileID: 190331814}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &190420166
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4842,13 +4779,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629524549}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.507, y: 1, z: -5.9899993}
+  m_LocalRotation: {x: 0.38421473, y: 0, z: 0, w: 0.9232438}
+  m_LocalPosition: {x: 3.36, y: 5.22, z: -5.63}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45.19, y: 0, z: 0}
 --- !u!114 &629524553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4908,7 +4845,7 @@ MonoBehaviour:
   m_player: {fileID: 1445682369}
   m_angleHor: 0
   m_radius: 10
-  m_rotation: 400
+  m_rotation: 200
   m_angleVer: 0
   m_spielfeld: {fileID: 4794779277092728819}
   camMov: {fileID: -3195837859317867427, guid: d6fb5ce46497b8d418ef3a8555bc0d12, type: 3}

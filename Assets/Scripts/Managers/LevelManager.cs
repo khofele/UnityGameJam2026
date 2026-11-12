@@ -170,7 +170,7 @@ public class LevelManager : Manager<LevelManager>
         }
         else if (m_currentEntity.CurrentActionPoints == 0)
         {
-            InGameUIManager.Instance.EnableEndRoundButton();
+            UIManager.Instance.EnableEndRoundButton();
         }
     }
 
@@ -207,7 +207,7 @@ public class LevelManager : Manager<LevelManager>
         }
 
         m_isPlayerTurn = false;
-        InGameUIManager.Instance.DisableEndRoundButton();
+        UIManager.Instance.DisableEndRoundButton();
 
         NextEntityTurn();
     }

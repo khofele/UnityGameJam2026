@@ -11,7 +11,7 @@ public class EntityPlayer : Entity
 
         if (m_currentActionsPoints == 0)
         {
-            InGameUIManager.Instance.EnableEndRoundButton();
+            UIManager.Instance.EnableEndRoundButton();
         }
     }
 

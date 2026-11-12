@@ -10,24 +10,19 @@ public class SBgrapplinghooksKin : SteeringBehaviourKin
     {
         m_path = _path;
         m_indexCurrentTarget = _indexCurrentTarget;
-        Starten();
     }
-
     protected override Vector3 UpdateVelocity()
     {
         //throw new System.NotImplementedException();
         Vector2 v = Vector2.zero;
 
         if (m_path == null || m_path.GetSize() == 0)
-            return v;
+            return new(v.x, 0f, v.y);
 
         m_target = m_path.GetNodeAt(m_indexCurrentTarget).Position;
-
-        Vector2 currentPos = new(m_kinematics.Position.x, m_kinematics.Position.z);
-        Vector2 targetPos = m_target;
-        targetPos.y = 0;
-
-        float sqrDistance = (targetPos - currentPos).sqrMagnitude;
+        Vector2 currentV2Pos = new(m_kinematics.Position.x, m_kinematics.Position.z);
+        
+        float sqrDistance = (m_target - currentV2Pos).sqrMagnitude;
         //TODO Debug.Log("Hallo " + sqrDistance);
         float sqrDistanceReached = m_distanceReached * m_distanceReached;
         //Debug.Log($"Index: {m_indexCurrentTarget} | Distanz: {sqrDistance / sqrDistanceReached}");
@@ -47,7 +42,7 @@ public class SBgrapplinghooksKin : SteeringBehaviourKin
                 //GraphManager sagen wo man steht, damit last Position blockiert wird
             }
         }
-        v = (m_kinematics.Position - m_target);
+        v = (m_target - currentV2Pos);
         if (v != Vector2.zero)
         {
             v = v.normalized * m_kinematics.MaxMoveVelo;

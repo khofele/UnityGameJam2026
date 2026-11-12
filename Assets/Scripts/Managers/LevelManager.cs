@@ -121,6 +121,7 @@ public class LevelManager : Manager<LevelManager>
         {
             entity.Tick(fTimeDelta);
         }
+        //m_currentEntity.Tick(fTimeDelta);// nur wer dran ist bewegt sich
     }
     public void CalculateEntityMovePath(Entity _entity, Node _target)//weiﬂ nicht wie gegner KI entscheiden wo hin
     {
@@ -157,9 +158,13 @@ public class LevelManager : Manager<LevelManager>
         Debug.Log("Current Entity " + m_currentEntity.name);
 
         // DEBUG
+        //if (m_currentEntity is EntityPlayer)
+        //{
+        //    ((EntityPlayer)m_currentEntity).ReduceActionPoints(m_currentEntity.CurrentActionPoints);
+        //}
         if (m_currentEntity is EntityPlayer)
         {
-            ((EntityPlayer)m_currentEntity).ReduceActionPoints(m_currentEntity.CurrentActionPoints);
+            ((EntityPlayer)m_currentEntity).SetActionPointsTo(400);
         }
         // DEBUG
 

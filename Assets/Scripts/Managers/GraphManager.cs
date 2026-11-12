@@ -42,16 +42,18 @@ public class Path
 {
     private List<Node> m_nodes = new();//readonly -> nachschauen wie das funktioniert
     public int GetSize() { return m_nodes.Count; }
+    //Count ist immer 1 größer als intuitiv angenommen
+    //Start Node ist immer teil des Pfads, Count ist zwei, anzahl kanten 1, distanz 1 (aber wenn man nur getSize nimmt, wird meist falsch gelaufen.... 
     public void AddNodeToPath(Node _node) { m_nodes.Add(_node); }
     public void ReversePath() { m_nodes.Reverse(); }
     public Node GetNodeAt(int ind) { return m_nodes[ind]; }
 
-    public Path CutPath(int _lenght)
+    public Path CutPath(int _length)
     {
-        if (m_nodes.Count <= _lenght)
+        if (m_nodes.Count <= _length)
             return this;
-        int anzElementsToRemove = m_nodes.Count - _lenght;
-        m_nodes.RemoveRange(_lenght, anzElementsToRemove);
+        int anzElementsToRemove = m_nodes.Count - _length;
+        m_nodes.RemoveRange(_length, anzElementsToRemove);
         return this;
     }
 }

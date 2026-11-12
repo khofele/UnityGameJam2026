@@ -64,7 +64,7 @@ public class UIManager : Manager<UIManager>
         m_slideKevin = false;
         m_material.SetFloat(m_kevinID, 0f);
         if (m_player.TryGetComponent(out EntityPlayer ep))
-            m_gameRunningPlayerCurrentActionPointsText.text = ep.CurrentActionPoints.ToString();
+            UpdateCurrentAPText(ep.CurrentActionPoints);
 
         m_gameRunningUI.SetActive(true);
     }
@@ -118,7 +118,8 @@ public class UIManager : Manager<UIManager>
     {
         ToggleEndTurnButton(false);
         CloseAllMenues();
-        LevelManager.Instance.NextEntityTurn();//mit Karo abgleichen
+        Debug.Log("End Turn Button Pressed");
+        //LevelManager.Instance.NextEntityTurn();//mit Karo abgleichen
     }
     public void HandleEnemyClicked(GameObject _enemy)
     {
@@ -185,5 +186,9 @@ public class UIManager : Manager<UIManager>
 
             m_material.SetFloat(m_kevinID, newKevinLerped);
         }
+    }
+    public void UpdateCurrentAPText(int _ap)
+    {
+        m_gameRunningPlayerCurrentActionPointsText.text = _ap.ToString();
     }
 }

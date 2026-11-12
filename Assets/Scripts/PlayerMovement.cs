@@ -85,6 +85,7 @@ public class PlayerMovement : MonoBehaviour
                 Ray ray = Camera.main.ScreenPointToRay(m_screenPos);
                 if (Physics.Raycast(ray, out RaycastHit hit, 1000f, m_clickableLayers))
                 {
+                    if (hit.collider.gameObject.CompareTag("wall")) return;
                     if (hit.collider.gameObject.TryGetComponent(out EntityEnemy ee))
                     {
                         UIManager.Instance.HandleEnemyClicked(ee.gameObject);

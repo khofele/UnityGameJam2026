@@ -6,7 +6,7 @@ using static UnityEditor.Experimental.GraphView.GraphView;
 public struct Edge
 {
     public float Cost { get; /*init*/ private set; }
-    public Node ToNode{get; private set; }
+    public Node ToNode { get; private set; }
 
     public Edge(Node _toNode, float _cost)
     {
@@ -18,7 +18,7 @@ public struct Edge
 public class Node
 {
     public List<Edge> Edges { get; private set; }
-    public Vector2 Position {get; private set; }
+    public Vector2 Position { get; private set; }
     //public NodeZustand Zustand { get => m_zustand; set => m_zustand = value; }//so statt getter und setter??
     //private NodeZustand m_zustand = NodeZustand.free;//graphmanager checkt ob node blockiert oder nicht
 
@@ -44,7 +44,7 @@ public class Path
     public int GetSize() { return m_nodes.Count; }
     public void AddNodeToPath(Node _node) { m_nodes.Add(_node); }
     public void ReversePath() { m_nodes.Reverse(); }
-    public Node GetNodeAt(int ind) { return  m_nodes[ind]; }
+    public Node GetNodeAt(int ind) { return m_nodes[ind]; }
 
     public Path CutPath(int _lenght)
     {
@@ -57,11 +57,13 @@ public class Path
 }
 public class GraphManager : Manager<GraphManager>
 {
-    private Node [,] m_nodes;
+    private Node[,] m_nodes;
     [SerializeField] private LayerMask m_blockingLayer;
     [SerializeField] private GameObject m_spielfeld;
-    private void Start()
+    protected override void Awake()
     {
+        base.Awake();
+
         int sizeX = Mathf.RoundToInt(m_spielfeld.transform.localScale.x * 10);
         int sizeY = Mathf.RoundToInt(m_spielfeld.transform.localScale.z * 10);
         GenerateNodeGraph(sizeX, sizeY);
@@ -77,9 +79,9 @@ public class GraphManager : Manager<GraphManager>
             }
         }
         //edges erst wenn alle nodes existieren
-        for (int _x = 0; _x < _size_x -1; ++_x)
+        for (int _x = 0; _x < _size_x - 1; ++_x)
         {
-            for (int _y = 0; _y < _size_y -1; ++_y)
+            for (int _y = 0; _y < _size_y - 1; ++_y)
             {
                 if (_x != 0)
                 {
@@ -102,7 +104,7 @@ public class GraphManager : Manager<GraphManager>
     }
     private void AddNode(int _x, int _y)
     {
-        Node _newNode = new(new Vector2(_x,_y));
+        Node _newNode = new(new Vector2(_x, _y));
         m_nodes[_x, _y] = _newNode;
 
         //node nicht walkable setzten, falls objekt drüber

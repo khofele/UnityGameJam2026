@@ -11,7 +11,7 @@ public class Kinematics
     public float MaxMoveVelo;
     public float MaxRotVelo;
 
-    public Kinematics(float maxMoveVelo = 1f, float maxRotVelo = 1f)
+    public Kinematics(float maxMoveVelo = 1f, float maxRotVelo = 2f)
     {
         MaxMoveVelo = maxMoveVelo;
         MaxRotVelo = maxRotVelo;

@@ -6,8 +6,22 @@ using UnityEngine.UI;
 public class UIManager : Manager<UIManager>
 {
     [SerializeField] private GameObject m_player;
+    [Header("------ Kevin ------")]
+    [SerializeField] private GameObject m_playingField;
+    private bool m_slideKevin = false;
+    [Range(0f, 10f)]
+    [SerializeField] private float m_speedKevin = 1f;
+    private Material m_material;
+    private int m_kevinID;
+    [Range(0f, 1f)]
+    [SerializeField] private float m_kevinMin = 0.2f;
+    [Range(0f, 1f)]
+    [SerializeField] private float m_kevinMax = 1f;
+    private float m_time = 0f;
+    [Space(15)]
     [Header("------ Game Running ------")]
     [SerializeField] private GameObject m_gameRunningUI;
+    [SerializeField] private TextMeshProUGUI m_gameRunningPlayerCurrentActionPointsText;
     [SerializeField] private Button m_endTurnButton;
     [Space(15)]
     [Header("------ Game Paused ------")]
@@ -18,6 +32,7 @@ public class UIManager : Manager<UIManager>
     [SerializeField] private TextMeshProUGUI m_pathLenghtText;
     [SerializeField] private TextMeshProUGUI m_pathLenghtWarningText;
     [SerializeField] private Button m_moveButton;
+    //[SerializeField] private Button m_cancelMoveButton;
     [SerializeField] private TextMeshProUGUI m_playerPathCurrentActionPointsText;
     [Space(15)]
     [Header("------ Enemy ------")]
@@ -28,16 +43,28 @@ public class UIManager : Manager<UIManager>
     [SerializeField] private Button m_attackButton;
     //[SerializeField] private TextMeshProUGUI m_playerEnemyCurrentActionPointsText;
 
-
     private void Start()
     {
+        m_kevinID = Shader.PropertyToID("_kevin");
+        if(m_playingField.TryGetComponent(out MeshRenderer rend))
+        {
+            m_material = rend.material;//.sharedMaterial wenn 'globales' Material geändert werden soll
+        }
+
         CloseAllMenues();
+        m_endTurnButton.onClick.AddListener(LevelManager.Instance.HandlePlayerTurnEnd);
+        m_endTurnButton.interactable = false;
     }
     public void CloseAllMenues()
     {
         m_pauseMenu.SetActive(false);
         m_pathMenu.SetActive(false);
         m_enemyMenu.SetActive(false);
+
+        m_slideKevin = false;
+        m_material.SetFloat(m_kevinID, 0f);
+        if (m_player.TryGetComponent(out EntityPlayer ep))
+            m_gameRunningPlayerCurrentActionPointsText.text = ep.CurrentActionPoints.ToString();
 
         m_gameRunningUI.SetActive(true);
     }
@@ -54,6 +81,8 @@ public class UIManager : Manager<UIManager>
         m_pauseMenu.SetActive(false);
         m_enemyMenu.SetActive(false);
         m_gameRunningUI.SetActive(false);
+
+        m_slideKevin = true;
 
         m_pathMenu.SetActive(true);
     }
@@ -101,11 +130,11 @@ public class UIManager : Manager<UIManager>
     {
         if (_path != null)
         {
-            m_pathLenghtText.text = "Distance: " + _path.GetSize().ToString();
+            m_pathLenghtText.text = "Distance: " + (_path.GetSize() -1).ToString();
             if (m_player.TryGetComponent(out EntityPlayer ep))
             {
-                m_playerPathCurrentActionPointsText.text = "Anzahl AP: " + ep.GetCurrentActionPoints().ToString();
-                if (ep.GetCurrentActionPoints() +1 < _path.GetSize())
+                m_playerPathCurrentActionPointsText.text = "Anzahl AP: " + ep.CurrentActionPoints.ToString();
+                if (ep.CurrentActionPoints +1 < _path.GetSize())
                 {
                     m_moveButton.GetComponentInChildren<TextMeshProUGUI>().color = Color.yellowGreen;
                     m_pathLenghtWarningText.color = Color.red;
@@ -123,15 +152,38 @@ public class UIManager : Manager<UIManager>
                 {
                     LevelManager.Instance.ConfirmEntityMove(ep);
                 });
-                //m_moveButton.interactable = !ep.GetIsMoving() && (ep.GetCurrentActionPoints() > 0);
+                if (ep.CurrentActionPoints <= 0)
+                {
+                    SetPlayerMoveButtonInteractable(false);
+                    m_moveButton.GetComponentInChildren<TextMeshProUGUI>().color = Color.red;
+                }
             }
         }
         CloseAllMenues();
         OpenPathMenu();
     }
-
     public void SetPlayerMoveButtonInteractable(bool _interactable)
     {
         m_moveButton.interactable = _interactable;
+    }
+    public void EnableEndRoundButton()
+    {
+        m_endTurnButton.interactable = true;
+    }
+    public void DisableEndRoundButton()
+    {
+        m_endTurnButton.interactable = false;
+    }
+    private void Update()
+    {
+        if (m_slideKevin)
+        {
+            m_time += Time.deltaTime;
+            if (m_time >= 2 * Mathf.PI) m_time -= 2 * Mathf.PI;
+            float newKevin = (Mathf.Sin(m_time * m_speedKevin) + 1f) / 2f;
+            float newKevinLerped = Mathf.Lerp(m_kevinMin, m_kevinMax, newKevin);
+
+            m_material.SetFloat(m_kevinID, newKevinLerped);
+        }
     }
 }

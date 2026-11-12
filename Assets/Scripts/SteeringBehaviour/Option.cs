@@ -1,12 +1,12 @@
 public abstract class Option// : MonoBehaviour
 {
     public enum Zustand { Gestartet, Gestoppt, Pausiert }
-    public Zustand CurrentZustand = Zustand.Gestartet;
+    public Zustand CurrentZustand = Zustand.Gestoppt;
 
     protected float m_dauer;
     protected float m_cooldown;
 
-    protected Zustand m_zustandVorher = Zustand.Gestartet;
+    protected Zustand m_zustandVorher = Zustand.Gestoppt;
 
     private bool m_bReady = true;
 

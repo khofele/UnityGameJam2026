@@ -9,4 +9,40 @@ public class EntityMoveAction : EntityAction
     {
         get { return m_movedTileAmount; }
     }
+
+    public override bool CanExecuteAction(EntityActionContext _actionContext)
+    {
+        if (_actionContext.TargetEntity == null)
+        {
+            return false;
+        }
+
+        Vector2 targetPosition = _actionContext.TargetEntity.CurrentNodePos;
+        //Node targetNode = GraphManager.Instance.GetNodeAt(Mathf.RoundToInt(targetPosition.x), Mathf.RoundToInt(targetPosition.y));
+        Node targetNode = GraphManager.Instance.FindClosestNode(_actionContext.TargetEntity.transform.position);
+
+        LevelManager.Instance.CalculateEntityMovePath(_actionContext.ExecutingEntity, targetNode);
+
+        if (LevelManager.Instance.Path == null || LevelManager.Instance.Path.GetSize() < 3)
+        {
+            return false;
+        }
+
+        int maxPathSize = Mathf.Min(LevelManager.Instance.Path.GetSize() - 1, _actionContext.ExecutingEntity.CurrentActionPoints + 1);
+        LevelManager.Instance.Path.CutPath(maxPathSize);
+
+        if(LevelManager.Instance.Path.GetSize() > 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public override void ExecuteAction(EntityActionContext _actionContext)
+    {
+        LevelManager.Instance.ConfirmEntityMove(_actionContext.ExecutingEntity);
+    }
 }

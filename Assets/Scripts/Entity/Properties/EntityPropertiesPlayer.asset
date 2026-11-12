@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 565fc21455809144fae25fd3eb32e86a, type: 3}
   m_Name: EntityPropertiesPlayer
   m_EditorClassIdentifier: Assembly-CSharp::EntityProperties
-  m_minActionPoints: 0
-  m_maxActionPoints: 0
+  m_minActionPoints: 1
+  m_maxActionPoints: 5
   m_maxHealth: 100
-  m_entityActions: []
+  m_entityActions:
+  - {fileID: 11400000, guid: 880d7317983fc1043a6f767749c87564, type: 2}
+  - {fileID: 11400000, guid: 8fa3f4052040b1c4790c12255e7c4267, type: 2}

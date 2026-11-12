@@ -10,6 +10,7 @@ public class EntityAnimController : MonoBehaviour
     }
     public void SetMovementParameter(bool isWalking)
     {
+        Debug.Log("Setze Animation Laufen: " + isWalking);
         m_animator.SetBool("IsWalking", isWalking);
     }
     public void SetAttackTrigger()

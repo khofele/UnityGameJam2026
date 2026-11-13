@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 //public enum NodeZustand { free, blocked, lastPlayerPos}//auch für Bots?? -----> kann auch über einen bool steuern
 public struct Edge
@@ -42,16 +41,18 @@ public class Path
 {
     private List<Node> m_nodes = new();//readonly -> nachschauen wie das funktioniert
     public int GetSize() { return m_nodes.Count; }
+    //Count ist immer 1 größer als intuitiv angenommen
+    //Start Node ist immer teil des Pfads, Count ist zwei, anzahl kanten 1, distanz 1 (aber wenn man nur getSize nimmt, wird meist falsch gelaufen.... 
     public void AddNodeToPath(Node _node) { m_nodes.Add(_node); }
     public void ReversePath() { m_nodes.Reverse(); }
     public Node GetNodeAt(int ind) { return m_nodes[ind]; }
 
-    public Path CutPath(int _lenght)
+    public Path CutPath(int _length)
     {
-        if (m_nodes.Count <= _lenght)
+        if (m_nodes.Count <= _length)
             return this;
-        int anzElementsToRemove = m_nodes.Count - _lenght;
-        m_nodes.RemoveRange(_lenght, anzElementsToRemove);
+        int anzElementsToRemove = m_nodes.Count - _length;
+        m_nodes.RemoveRange(_length, anzElementsToRemove);
         return this;
     }
 }
@@ -108,8 +109,13 @@ public class GraphManager : Manager<GraphManager>
         m_nodes[_x, _y] = _newNode;
 
         //node nicht walkable setzten, falls objekt drüber
-        Vector3 von = new(_x, 0f, _y);
-        if (Physics.Raycast(von, Vector3.up, 0.1f, m_blockingLayer))
+        //Vector3 von = new(_x, 0f, _y);
+        //if (Physics.Raycast(von, Vector3.up, 1f, m_blockingLayer))
+        //{
+        //    _newNode.IsWalkable = false;
+        //}
+        Vector3 nodeCenter = new(_x, 0.5f, _y);
+        if (Physics.CheckSphere(nodeCenter, 0.4f, m_blockingLayer))
         {
             _newNode.IsWalkable = false;
         }

@@ -61,6 +61,12 @@ public abstract class Entity : MonoBehaviour
 
     public abstract void ReduceActionPoints(int _actionPoints);
 
+    //DEBUG
+    public void SetActionPointsTo(int _actionPoints)
+    {
+        m_currentActionsPoints = _actionPoints;
+    }
+
     public void RollOutActionPoints()
     {
         int actionPoints = 0;
@@ -111,8 +117,8 @@ public abstract class Entity : MonoBehaviour
             case eSteeringBehaviour.GrapplinghooksKin:
                 if (_path != null)
                 {
-                    if(_path.GetSize()>m_currentActionsPoints + 1)
-                        _path = _path.CutPath(m_currentActionsPoints);
+                    if (_path.GetSize() > m_currentActionsPoints + 1)
+                        _path.CutPath(m_currentActionsPoints + 1);
                     m_steering = new SBgrapplinghooksKin(_path); //oder statt new einen start/stop trigger setzen??
                     m_steering.OnMovementStateChanged += HandleMovementChange;
                     if (_path.GetSize() > 1)
@@ -134,7 +140,10 @@ public abstract class Entity : MonoBehaviour
     protected virtual void HandleMovementChange(bool _isMoving)
     {
         m_animController.SetMovementParameter(_isMoving);
-        if(_isMoving == false) m_steering.OnMovementStateChanged -= HandleMovementChange;
+        if (_isMoving == false)
+        {
+            m_steering.OnMovementStateChanged -= HandleMovementChange;
+        }
     }
     private void OnDisable()
     {

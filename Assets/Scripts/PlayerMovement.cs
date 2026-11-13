@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     private List<RaycastResult> m_raycastResults = new List<RaycastResult>();
     Vector2 m_screenPos;
     private bool m_screenClicked = false;
-    public bool CanClick = true;
+    [HideInInspector] public bool CanClick = true;
     private void Awake()
     {
         m_inputActions = new CamMoveAndClick_Actions();

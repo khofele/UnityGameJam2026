@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UIManager : Manager<UIManager>
 {
     [SerializeField] private GameObject m_player;
+    [SerializeField] private Pfadvisualisierung m_pf;
     [Header("------ Kevin ------")]
     [SerializeField] private GameObject m_playingField;
     private bool m_slideKevin = false;
@@ -61,10 +62,11 @@ public class UIManager : Manager<UIManager>
         m_pathMenu.SetActive(false);
         m_enemyMenu.SetActive(false);
 
+        m_pf.ShowPath(false);
         m_slideKevin = false;
         m_material.SetFloat(m_kevinID, 0f);
         if (m_player.TryGetComponent(out EntityPlayer ep))
-            m_gameRunningPlayerCurrentActionPointsText.text = ep.CurrentActionPoints.ToString();
+            UpdateCurrentAPText(ep.CurrentActionPoints);
 
         m_gameRunningUI.SetActive(true);
     }
@@ -83,6 +85,7 @@ public class UIManager : Manager<UIManager>
         m_gameRunningUI.SetActive(false);
 
         m_slideKevin = true;
+        m_pf.ShowPath(true);
 
         m_pathMenu.SetActive(true);
     }
@@ -118,7 +121,8 @@ public class UIManager : Manager<UIManager>
     {
         ToggleEndTurnButton(false);
         CloseAllMenues();
-        LevelManager.Instance.NextEntityTurn();//mit Karo abgleichen
+        Debug.Log("End Turn Button Pressed");
+        //LevelManager.Instance.NextEntityTurn();//mit Karo abgleichen
     }
     public void HandleEnemyClicked(GameObject _enemy)
     {
@@ -133,19 +137,22 @@ public class UIManager : Manager<UIManager>
             m_pathLenghtText.text = "Distance: " + (_path.GetSize() -1).ToString();
             if (m_player.TryGetComponent(out EntityPlayer ep))
             {
-                m_playerPathCurrentActionPointsText.text = "Anzahl AP: " + ep.CurrentActionPoints.ToString();
+                m_playerPathCurrentActionPointsText.text = "Remaining Action Points: " + ep.CurrentActionPoints.ToString();
+                m_pf.DrawPath(_path, ep.CurrentActionPoints +1);
                 if (ep.CurrentActionPoints +1 < _path.GetSize())
                 {
                     m_moveButton.GetComponentInChildren<TextMeshProUGUI>().color = Color.yellowGreen;
                     m_pathLenghtWarningText.color = Color.red;
                     m_pathLenghtText.color = Color.red;
                     m_pathLenghtWarningText.text = "You don't have enough action points to walk this far!";
+                    //m_pf.PathVis(_path, false);//veraltet
                 }
                 else
                 {
                     m_moveButton.GetComponentInChildren<TextMeshProUGUI>().color = Color.green;
                     m_pathLenghtText.color = Color.green;
                     m_pathLenghtWarningText.text = "";
+                    //m_pf.PathVis(_path, true);//veraltet
                 }
                 m_moveButton.onClick.RemoveAllListeners();
                 m_moveButton.onClick.AddListener(() =>
@@ -185,5 +192,9 @@ public class UIManager : Manager<UIManager>
 
             m_material.SetFloat(m_kevinID, newKevinLerped);
         }
+    }
+    public void UpdateCurrentAPText(int _ap)
+    {
+        m_gameRunningPlayerCurrentActionPointsText.text = _ap.ToString();
     }
 }

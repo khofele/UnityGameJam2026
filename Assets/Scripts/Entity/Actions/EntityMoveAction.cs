@@ -23,7 +23,7 @@ public class EntityMoveAction : EntityAction
 
         LevelManager.Instance.CalculateEntityMovePath(_actionContext.ExecutingEntity, targetNode);
 
-        if (LevelManager.Instance.Path == null || LevelManager.Instance.Path.GetSize() < 3)
+        if (LevelManager.Instance.Path == null || LevelManager.Instance.Path.GetSize() < 3)//<3 damit stattdessen angegriffen wird??
         {
             return false;
         }

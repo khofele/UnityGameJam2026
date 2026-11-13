@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 //public enum NodeZustand { free, blocked, lastPlayerPos}//auch für Bots?? -----> kann auch über einen bool steuern
 public struct Edge
@@ -110,8 +109,13 @@ public class GraphManager : Manager<GraphManager>
         m_nodes[_x, _y] = _newNode;
 
         //node nicht walkable setzten, falls objekt drüber
-        Vector3 von = new(_x, 0f, _y);
-        if (Physics.Raycast(von, Vector3.up, 0.1f, m_blockingLayer))
+        //Vector3 von = new(_x, 0f, _y);
+        //if (Physics.Raycast(von, Vector3.up, 1f, m_blockingLayer))
+        //{
+        //    _newNode.IsWalkable = false;
+        //}
+        Vector3 nodeCenter = new(_x, 0.5f, _y);
+        if (Physics.CheckSphere(nodeCenter, 0.4f, m_blockingLayer))
         {
             _newNode.IsWalkable = false;
         }

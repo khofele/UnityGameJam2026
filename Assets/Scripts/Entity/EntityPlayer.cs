@@ -1,7 +1,14 @@
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerMovement))]
 public class EntityPlayer : Entity
 {
+    private PlayerMovement m_playerMovement;
+    private void Start()
+    {
+        if (TryGetComponent(out PlayerMovement pm))
+            m_playerMovement = pm;
+    }
     public override void ReduceActionPoints(int _actionPoints)
     {
         if ((m_currentActionsPoints - _actionPoints) >= 0)
@@ -30,5 +37,6 @@ public class EntityPlayer : Entity
     {
         base.HandleMovementChange(_isMoving);
         UIManager.Instance.SetPlayerMoveButtonInteractable(!_isMoving);
+        m_playerMovement.CanClick = !_isMoving;
     }
 }

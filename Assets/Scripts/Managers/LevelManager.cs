@@ -12,6 +12,7 @@ public class LevelManager : Manager<LevelManager>
     private int m_currentEntityIndex = 0;
     private bool m_isPlayerTurn = false;
     private Entity m_currentEntity = null;
+    public bool PlayerCanCalculatePath = true;
 
     public List<Entity> LevelEntities
     {
@@ -162,10 +163,10 @@ public class LevelManager : Manager<LevelManager>
         //{
         //    ((EntityPlayer)m_currentEntity).ReduceActionPoints(m_currentEntity.CurrentActionPoints);
         //}
-        if (m_currentEntity is EntityPlayer)
-        {
-            ((EntityPlayer)m_currentEntity).SetActionPointsTo(400);
-        }
+        //if (m_currentEntity is EntityPlayer)
+        //{
+        //    ((EntityPlayer)m_currentEntity).SetActionPointsTo(400);
+        //}
         // DEBUG
 
         if (m_currentEntity is EntityEnemy)

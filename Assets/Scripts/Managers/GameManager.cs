@@ -7,6 +7,8 @@ public class GameManager : Manager<GameManager>
 {
     //[SerializeField] private LevelManager m_levelManager = null;
 
+    public int LuckyNumber {  get; private set; }
+
     private GameStates m_currentGameState = GameStates.PAUSED;
 
     public GameStates CurrentGameState
@@ -66,9 +68,19 @@ public class GameManager : Manager<GameManager>
     }
     private void DestroyOtherManagers()
     {
-        Destroy(UIManager.Instance.gameObject);
-        Destroy(GraphManager.Instance.gameObject);
-        Destroy(LevelManager.Instance.gameObject);
+        if (SceneManager.GetActiveScene().buildIndex != (int)Scenes.Level1) return;
+
+        //in Tutorial und MainLevel werden Manager Zerstört
+        if (UIManager.Instance != null)
+            Destroy(UIManager.Instance.gameObject);
+        if (GraphManager.Instance != null)
+            Destroy(GraphManager.Instance.gameObject);
+        if (LevelManager.Instance != null)
+            Destroy(LevelManager.Instance.gameObject);
+    }
+    public void SetLuckyNumber(int number)
+    {
+        LuckyNumber = number;
     }
 }
 public enum Scenes { MainMenu, Tutorial ,Level1}

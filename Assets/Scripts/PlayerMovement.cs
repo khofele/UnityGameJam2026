@@ -41,7 +41,8 @@ public class PlayerMovement : MonoBehaviour
     private EntityPlayer m_playerEntity;
     private List<RaycastResult> m_raycastResults = new List<RaycastResult>();
     Vector2 m_screenPos;
-    bool m_screenClicked = false;
+    private bool m_screenClicked = false;
+    public bool CanClick = true;
     private void Awake()
     {
         m_inputActions = new CamMoveAndClick_Actions();
@@ -60,6 +61,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void ClickPerformed(InputAction.CallbackContext context)
     {
+        if(CanClick == false) return;
         m_screenPos = m_inputActions.ClickActions.PointerPosition.ReadValue<Vector2>();
         m_screenClicked = true;
     }
@@ -92,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
                     }
                     else
                     {
-                        Vector3 clickPosition = new Vector3(Mathf.RoundToInt(hit.point.x), Mathf.RoundToInt(hit.point.y), Mathf.RoundToInt(hit.point.z));//war Round()
+                        Vector3 clickPosition = new(Mathf.RoundToInt(hit.point.x), Mathf.RoundToInt(hit.point.y), Mathf.RoundToInt(hit.point.z));//war Round()
                         Debug.Log(clickPosition + " angeklickt");
                         if (GraphManager.Instance.CanMoveToPosition(clickPosition))//out Node wär cool aber weiß nicht wie das programmiert wird
                         {

@@ -83,4 +83,4 @@ public class GameManager : Manager<GameManager>
         LuckyNumber = number;
     }
 }
-public enum Scenes { MainMenu, Tutorial ,Level1}
+public enum Scenes { MainMenu, Tutorial ,Level1, GameOver}

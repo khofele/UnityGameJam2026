@@ -60,6 +60,7 @@ public class UIManager : Manager<UIManager>
         }
         m_material.SetFloat(m_kevinID, 0f);
 
+        ResetEACs();
         CloseAllMenues();
         m_endTurnButton.onClick.AddListener(LevelManager.Instance.HandlePlayerTurnEnd);
         m_endTurnButton.interactable = false;
@@ -76,7 +77,7 @@ public class UIManager : Manager<UIManager>
         m_material.SetFloat(m_kevinID, 0f);
         if (m_player.TryGetComponent(out EntityPlayer ep))
             UpdateCurrentAPText(ep.CurrentActionPoints);
-        ResetEACs();
+        //ResetEACs();//Upsi führt zu crash
         
         m_gameRunningUI.SetActive(true);
     }

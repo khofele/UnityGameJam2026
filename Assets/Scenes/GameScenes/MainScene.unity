@@ -26623,6 +26623,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 979214109237453047, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 979214109237453047, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 979214109237453047, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 990302814751491137, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
       propertyPath: m_Name
       value: MenuUICanvas
@@ -26644,10 +26656,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1294127471}
     - target: {fileID: 6055000806060789459, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7057023725749775665, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}

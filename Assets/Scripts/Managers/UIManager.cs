@@ -51,7 +51,9 @@ public class UIManager : Manager<UIManager>
     [SerializeField] private TextMeshProUGUI m_enemyOORWarningText;
     [SerializeField] private Button m_attackButton;
     //[SerializeField] private TextMeshProUGUI m_playerEnemyCurrentActionPointsText;
-
+    [Space(15)]
+    [Header("------ Health Potion ------")]
+    [SerializeField] private Button m_drinkHealthPotionButton;
     private void Start()
     {
         m_kevinID = Shader.PropertyToID("_kevin");
@@ -115,6 +117,7 @@ public class UIManager : Manager<UIManager>
     }
     public void OnMainMenuButtonPressed()//int vom button bekommen?
     {
+        GameManager.Instance.SetState(GameStates.RUNNING);
         GameManager.Instance.LoadScene((int)Scenes.MainMenu);
     }
     public void OnQuitGameButtonPressed()
@@ -285,6 +288,22 @@ public class UIManager : Manager<UIManager>
     public void UpdatePlayerHPDisplay(float _hp)
     {
         m_playerHPDisplayText.text = _hp.ToString();
+    }
+    public void ShowHealthPotion(HealthPotionCollect _potion)
+    {
+        m_drinkHealthPotionButton.gameObject.SetActive(true);
+        m_drinkHealthPotionButton.onClick.RemoveAllListeners();
+        m_drinkHealthPotionButton.onClick.AddListener(() =>
+        {
+            m_player.Heal(_potion.Amount);
+            Destroy(_potion.gameObject);
+            UpdatePlayerHPDisplay(m_player.CurrentHealth);
+        });
+    }
+    public void ClearHealthPotion()
+    {
+        m_drinkHealthPotionButton.gameObject.SetActive(false);
+        m_drinkHealthPotionButton.onClick.RemoveAllListeners();
     }
     public void ShowLeaveLevelButton()
     {

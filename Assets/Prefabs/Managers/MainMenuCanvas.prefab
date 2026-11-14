@@ -1892,6 +1892,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BGCredits
       objectReference: {fileID: 0}
+    - target: {fileID: 6420731797521805918, guid: 06916da1084850c45a58d1f73fc856b5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9175082420587957940, guid: 06916da1084850c45a58d1f73fc856b5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

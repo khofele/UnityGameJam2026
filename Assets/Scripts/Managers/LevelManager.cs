@@ -86,6 +86,7 @@ public class LevelManager : Manager<LevelManager>
         if (m_currentEntity is EntityPlayer == true)
         {
             m_isPlayerTurn = true;
+            UIManager.Instance.ShowYourTurnImg();
         }
         else
         {

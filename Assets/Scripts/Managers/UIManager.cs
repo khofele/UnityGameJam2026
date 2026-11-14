@@ -7,6 +7,7 @@ using System.Collections;
 public class UIManager : Manager<UIManager>
 {
     [SerializeField] private EntityPlayer m_player;
+    [HideInInspector] public EntityPlayer Player {  get { return m_player; } }
     [SerializeField] private Pfadvisualisierung m_pf;
     [Header("------ Kevin ------")]
     [SerializeField] private GameObject m_playingField;
@@ -29,6 +30,7 @@ public class UIManager : Manager<UIManager>
     [SerializeField] private Image m_gameRunningPlayerCurrentActionPointsBGImage;
     [SerializeField] private Button m_endTurnButton;
     [SerializeField] private Button m_leaveLevelButton;
+    [SerializeField] private Image m_yourTurnImage;
     [Space(15)]
     [Header("------ Game Paused ------")]
     [SerializeField] private GameObject m_pauseMenu;
@@ -295,9 +297,15 @@ public class UIManager : Manager<UIManager>
         m_drinkHealthPotionButton.onClick.RemoveAllListeners();
         m_drinkHealthPotionButton.onClick.AddListener(() =>
         {
+            if(_potion == null)
+            {
+                ClearHealthPotion();
+                return;
+            }
             m_player.Heal(_potion.Amount);
             Destroy(_potion.gameObject);
             UpdatePlayerHPDisplay(m_player.CurrentHealth);
+            ClearHealthPotion();
         });
     }
     public void ClearHealthPotion()
@@ -329,5 +337,15 @@ public class UIManager : Manager<UIManager>
                 yield return new WaitForSeconds(0.1f);
             }
         }
+    }
+    public void ShowYourTurnImg()
+    {
+        StartCoroutine(YourTurnRoutine());
+    }
+    private IEnumerator YourTurnRoutine()
+    {
+        m_yourTurnImage.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        m_yourTurnImage.gameObject.SetActive(false);
     }
 }

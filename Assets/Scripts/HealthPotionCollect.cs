@@ -10,6 +10,7 @@ public class HealthPotionCollect : MonoBehaviour
 
     [SerializeField] private float m_speed = 3f;
     [SerializeField] private float m_height = 0.5f;
+    [SerializeField] private float m_rotationSpeed = 15f;
     private float m_startY;
 
     private float m_time = 0.0f;
@@ -40,6 +41,7 @@ public class HealthPotionCollect : MonoBehaviour
         }
         float yOffset = ((Mathf.Sin(m_time) + 1f) / 2f) * m_height;
         transform.position = new Vector3(transform.position.x, m_startY + yOffset, transform.position.z);
+        transform.Rotate(0f, m_rotationSpeed * Time.deltaTime, 0f, Space.World);
     }
     //private void OnTriggerEnter(Collider other)
     //{

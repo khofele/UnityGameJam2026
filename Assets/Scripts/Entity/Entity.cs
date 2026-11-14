@@ -11,7 +11,7 @@ public abstract class Entity : MonoBehaviour
 
     protected EntityAnimController m_animController;
     [HideInInspector] public EntityAnimController AnimController { get { return m_animController; } }
-    private bool m_isEntitiesTurn = false; // TODO im Levelmanager setzen
+    //private bool m_isEntitiesTurn = false; // TODO im Levelmanager setzen
                                            // TODO Nodegraph resetten nach Ende der Runde
 
     public event Action OnAllActionPointsUsed;

@@ -1,5 +1,4 @@
 using TMPro;
-using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
@@ -316,7 +315,7 @@ public class UIManager : Manager<UIManager>
     public void ShowLeaveLevelButton()
     {
         m_leaveLevelButton.gameObject.SetActive(true);
-        StartCoroutine(BlinkError(m_leaveLevelButton.gameObject, 15));
+        StartCoroutine(BlinkError(m_leaveLevelButton.gameObject, 150));
     }
     public void OnLeaveLevelButtonPressed()
     {

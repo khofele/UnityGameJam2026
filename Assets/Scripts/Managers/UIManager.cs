@@ -30,6 +30,7 @@ public class UIManager : Manager<UIManager>
     [SerializeField] private Image m_gameRunningPlayerCurrentActionPointsBGImage;
     [SerializeField] private Button m_endTurnButton;
     [SerializeField] private Button m_leaveLevelButton;
+    [SerializeField] private Image m_yourTurnImage;
     [Space(15)]
     [Header("------ Game Paused ------")]
     [SerializeField] private GameObject m_pauseMenu;
@@ -336,5 +337,15 @@ public class UIManager : Manager<UIManager>
                 yield return new WaitForSeconds(0.1f);
             }
         }
+    }
+    public void ShowYourTurnImg()
+    {
+        StartCoroutine(YourTurnRoutine());
+    }
+    private IEnumerator YourTurnRoutine()
+    {
+        m_yourTurnImage.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        m_yourTurnImage.gameObject.SetActive(false);
     }
 }

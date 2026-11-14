@@ -131,7 +131,7 @@ Material:
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
-    - _kevin: 0.465
+    - _kevin: 0
     - _sergei: 0.446
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

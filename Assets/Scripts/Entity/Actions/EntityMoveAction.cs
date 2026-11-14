@@ -29,9 +29,10 @@ public class EntityMoveAction : EntityAction
         }
 
         int maxPathSize = Mathf.Min(LevelManager.Instance.Path.GetSize() - 1, _actionContext.ExecutingEntity.CurrentActionPoints + 1);
-        LevelManager.Instance.Path.CutPath(maxPathSize);
+        //LevelManager.Instance.Path.CutPath(maxPathSize);
+        LevelManager.Instance.Path.CutPath(2);//darf nur 1 pro action laufen also länge 2
 
-        if(LevelManager.Instance.Path.GetSize() > 1)
+        if (LevelManager.Instance.Path.GetSize() > 1)
         {
             return true;
         }

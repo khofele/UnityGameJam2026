@@ -4,13 +4,14 @@ using UnityEngine;
 public class EntityAnimController : MonoBehaviour
 {
     private Animator m_animator;
+    public Animator Animator { get { return m_animator; } }
     private void Awake()
     {
         m_animator = GetComponent<Animator>();
     }
     public void SetMovementParameter(bool isWalking)
     {
-        Debug.Log("Setze Animation Laufen: " + isWalking);
+        //Debug.Log("Setze Animation Laufen: " + isWalking);
         m_animator.SetBool("IsWalking", isWalking);
     }
     public void SetAttackTrigger()
@@ -24,5 +25,10 @@ public class EntityAnimController : MonoBehaviour
     public void SetDeathTrigger()//auch damage dealer, OnDeath
     {
         m_animator.SetTrigger("Die");
+    }
+    public void ResetAnimator()
+    {
+        m_animator.Rebind();
+        m_animator.Update(0f);
     }
 }

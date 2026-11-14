@@ -8,7 +8,13 @@ public class EntityEnemy : Entity
     [SerializeField] private EntityPlayer m_playerEntityTarget = null;
     [SerializeField] private EntityEnemyBehavior m_enemyBehavior = null;
 
-    public event Action OnEnemyKilled;
+    [SerializeField] private int m_renderTextureIndex = 0;// = 0 for GreenButts, = 1 for Ted
+    public int RenderTextureIndex { get { return m_renderTextureIndex; } }
+
+    public event Action<EntityEnemy> OnEnemyKilled;
+
+    private bool m_standsStill = true;
+    private bool m_doneAttacking = true;
 
     private IEnumerator ExecuteEnemyTurn()
     {
@@ -31,11 +37,14 @@ public class EntityEnemy : Entity
             }
 
             yield return new WaitForSeconds(0.1f);
+            yield return new WaitUntil(() => m_standsStill == true);
+            yield return new WaitUntil(() => m_doneAttacking == true);//macht anscheinend nichts
         }
 
         yield return new WaitForSeconds(0.1f);
 
         Debug.Log(gameObject.name + " finished");
+
         TriggerOnAllActionPointsUsedEvent();
     }
 
@@ -56,12 +65,35 @@ public class EntityEnemy : Entity
         if (m_currentHealth <= 0.0f)
         {
             m_isAlive = false;
-            OnEnemyKilled?.Invoke();
+            OnEnemyKilled?.Invoke(this);
+            AnimController.SetDeathTrigger();
         }
+        AnimController.SetHitTrigger();
+        UIManager.Instance.UpdateAttackUI(this, !m_isAlive);
     }
 
     public void StartEnemyTurn()
     {
         StartCoroutine(ExecuteEnemyTurn());
+    }
+
+    protected override void HandleMovementChange(bool _isMoving)
+    {
+        base.HandleMovementChange(_isMoving);
+        m_standsStill = !_isMoving;
+    }
+
+    public void StartAttackTimer()
+    {
+        m_doneAttacking = false;
+        StartCoroutine(AttackAnimationDelay());
+    }
+    private IEnumerator AttackAnimationDelay()
+    {
+        yield return null;
+        float wait = m_animController.Animator.GetCurrentAnimatorStateInfo(0).length;
+        Debug.Log(wait);
+        yield return new WaitForSeconds(wait);
+        m_doneAttacking = true;
     }
 }

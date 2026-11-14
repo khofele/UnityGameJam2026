@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EntityPropertiesEnemy
   m_EditorClassIdentifier: Assembly-CSharp::EntityProperties
   m_minActionPoints: 1
-  m_maxActionPoints: 5
+  m_maxActionPoints: 10
   m_maxHealth: 100
   m_entityActions:
   - {fileID: 11400000, guid: 880d7317983fc1043a6f767749c87564, type: 2}

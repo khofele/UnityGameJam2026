@@ -2,10 +2,11 @@ using TMPro;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UIManager : Manager<UIManager>
 {
-    [SerializeField] private GameObject m_player;
+    [SerializeField] private EntityPlayer m_player;
     [SerializeField] private Pfadvisualisierung m_pf;
     [Header("------ Kevin ------")]
     [SerializeField] private GameObject m_playingField;
@@ -22,7 +23,10 @@ public class UIManager : Manager<UIManager>
     [Space(15)]
     [Header("------ Game Running ------")]
     [SerializeField] private GameObject m_gameRunningUI;
+    [SerializeField] private TextMeshProUGUI m_roundCounterDisplayText;//TODO anzeigen lassen
+    [SerializeField] private TextMeshProUGUI m_playerHPDisplayText;//Slider
     [SerializeField] private TextMeshProUGUI m_gameRunningPlayerCurrentActionPointsText;
+    [SerializeField] private Image m_gameRunningPlayerCurrentActionPointsBGImage;
     [SerializeField] private Button m_endTurnButton;
     [Space(15)]
     [Header("------ Game Paused ------")]
@@ -38,8 +42,11 @@ public class UIManager : Manager<UIManager>
     [Space(15)]
     [Header("------ Enemy ------")]
     [SerializeField] private GameObject m_enemyMenu;
-    //[SerializeField] private TextMeshProUGUI m_enemyNameText;
-    [SerializeField] private TextMeshProUGUI m_enemyHealthText;
+    [SerializeField] private TextMeshProUGUI m_enemyNameText;
+    [SerializeField] private RawImage m_enemyTextureRawImage;
+    [SerializeField] private RenderTexture[] m_enemyRenderTextures;
+    [SerializeField] private EntityAnimController[] m_enemyRenderTextureEntityAnimControllers;//bissl lang
+    [SerializeField] private TextMeshProUGUI m_enemyHealthText;//Slider
     [SerializeField] private TextMeshProUGUI m_enemyOORWarningText;
     [SerializeField] private Button m_attackButton;
     //[SerializeField] private TextMeshProUGUI m_playerEnemyCurrentActionPointsText;
@@ -49,12 +56,14 @@ public class UIManager : Manager<UIManager>
         m_kevinID = Shader.PropertyToID("_kevin");
         if(m_playingField.TryGetComponent(out MeshRenderer rend))
         {
-            m_material = rend.material;//.sharedMaterial wenn 'globales' Material geändert werden soll
+            m_material = rend.sharedMaterial;//.sharedMaterial wenn 'globales' Material geändert werden soll
         }
+        m_material.SetFloat(m_kevinID, 0f);
 
         CloseAllMenues();
         m_endTurnButton.onClick.AddListener(LevelManager.Instance.HandlePlayerTurnEnd);
         m_endTurnButton.interactable = false;
+        UpdateRoundCounter(1,LevelManager.Instance.MaxRoundCounter);
     }
     public void CloseAllMenues()
     {
@@ -67,7 +76,8 @@ public class UIManager : Manager<UIManager>
         m_material.SetFloat(m_kevinID, 0f);
         if (m_player.TryGetComponent(out EntityPlayer ep))
             UpdateCurrentAPText(ep.CurrentActionPoints);
-
+        ResetEACs();
+        
         m_gameRunningUI.SetActive(true);
     }
     private void OpenEnemyMenu()
@@ -88,10 +98,6 @@ public class UIManager : Manager<UIManager>
         m_pf.ShowPath(true);
 
         m_pathMenu.SetActive(true);
-    }
-    public void ToggleEndTurnButton(bool _enabled)
-    {
-        m_endTurnButton.interactable = _enabled;
     }
     public void OnPauseButtonPressed()
     {
@@ -119,17 +125,88 @@ public class UIManager : Manager<UIManager>
     //}
     public void OnEndTurnButtonPressed()
     {
-        ToggleEndTurnButton(false);
+        DisableEndRoundButton();
         CloseAllMenues();
-        Debug.Log("End Turn Button Pressed");
+        //Debug.Log("End Turn Button Pressed");
         //LevelManager.Instance.NextEntityTurn();//mit Karo abgleichen
     }
-    public void HandleEnemyClicked(GameObject _enemy)
+    public void HandleEnemyClicked(EntityEnemy _enemy)
     {
-        //TODO Daten aus _enemy auslesen und in text schreiben
+        if (_enemy.IsAlive == false) return;
+        
+        m_enemyNameText.text = _enemy.gameObject.name;
+        m_enemyTextureRawImage.texture = m_enemyRenderTextures[_enemy.RenderTextureIndex];
+        m_enemyHealthText.text = _enemy.CurrentHealth.ToString();//als slider
+        if (m_player.CurrentActionPoints <= 0)
+        {
+            m_enemyOORWarningText.text = "You're out of Action Points!";
+            m_enemyOORWarningText.color = Color.red;
+            m_attackButton.GetComponentInChildren<TextMeshProUGUI>().color = Color.red;
+            m_attackButton.onClick.RemoveAllListeners();
+            m_attackButton.interactable = false;
+        }
+        else
+        {
+            if ((m_player.CurrentNodePos - _enemy.CurrentNodePos).magnitude > LevelManager.Instance.MaxPlayerAttackReach)
+            {
+                m_enemyOORWarningText.text = "You're out of Reach!";
+                m_enemyOORWarningText.color = Color.red;
+                m_attackButton.GetComponentInChildren<TextMeshProUGUI>().color = Color.red;
+                m_attackButton.onClick.RemoveAllListeners();
+                m_attackButton.interactable = false;
+            }
+            else if ((m_player.CurrentNodePos - _enemy.CurrentNodePos).magnitude > LevelManager.Instance.AttackReach)
+            {
+                m_enemyOORWarningText.text = "You're almost out of reach!\nYour damage will be halved.";
+                m_enemyOORWarningText.color = Color.orangeRed;
+                m_attackButton.GetComponentInChildren<TextMeshProUGUI>().color = Color.yellowGreen;
+                m_attackButton.onClick.RemoveAllListeners();
+                m_attackButton.onClick.AddListener(() =>
+                {
+                    LevelManager.Instance.ConfirmEntityAttack(m_player, _enemy, LevelManager.Instance.RollDamage(true) / 2f);
+                    //UpdateAttackUI(_enemy);//in enemy entity
+                    m_attackButton.interactable = false;
+                    m_player.PlayerMovement.CanClick = false;
+                    m_player.ReduceActionPoints(1);
+                });
+                m_attackButton.interactable = true;
+            }
+            else
+            {
+                m_enemyOORWarningText.text = "";
+                m_attackButton.GetComponentInChildren<TextMeshProUGUI>().color = Color.green;
+                m_attackButton.onClick.RemoveAllListeners();
+                m_attackButton.onClick.AddListener(() =>
+                {
+                    LevelManager.Instance.ConfirmEntityAttack(m_player, _enemy, LevelManager.Instance.RollDamage(true));
+                    m_attackButton.interactable = false;
+                    m_player.PlayerMovement.CanClick = false;
+                    m_player.ReduceActionPoints(1);
+                });
+                m_attackButton.interactable = true;
+            }
+        }
         CloseAllMenues();
         OpenEnemyMenu();
     }
+
+    public void UpdateAttackUI(EntityEnemy _enemy, bool _dies)
+    {
+        HandleEnemyClicked(_enemy);
+        if (_dies) m_enemyRenderTextureEntityAnimControllers[_enemy.RenderTextureIndex].SetDeathTrigger();
+        m_enemyRenderTextureEntityAnimControllers[_enemy.RenderTextureIndex].SetHitTrigger();
+        m_player.PlayerMovement.CanClick = true;
+    }
+
+    public void ResetEACs()
+    {
+        foreach (EntityAnimController EAC in m_enemyRenderTextureEntityAnimControllers)
+        {
+            EAC.ResetAnimator();
+        }
+        CloseAllMenues();
+    }
+
     public void HandleGroundClicked(Path _path)
     {
         if (_path != null)
@@ -158,6 +235,7 @@ public class UIManager : Manager<UIManager>
                 m_moveButton.onClick.AddListener(() =>
                 {
                     LevelManager.Instance.ConfirmEntityMove(ep);
+                    CloseAllMenues();
                 });
                 if (ep.CurrentActionPoints <= 0)
                 {
@@ -196,5 +274,27 @@ public class UIManager : Manager<UIManager>
     public void UpdateCurrentAPText(int _ap)
     {
         m_gameRunningPlayerCurrentActionPointsText.text = _ap.ToString();
+        m_playerPathCurrentActionPointsText.text = _ap.ToString();
+    }
+    public void UpdateRoundCounter(int _currentRound, int _maxRound)
+    {
+        m_roundCounterDisplayText.text = _currentRound + "/" + _maxRound;
+    }
+    public void UpdatePlayerHPDisplay(float _hp)
+    {
+        m_playerHPDisplayText.text = _hp.ToString();
+    }
+    private IEnumerator BlinkError()
+    {
+        Color originalColor = m_gameRunningPlayerCurrentActionPointsBGImage.color;
+
+        for (int i = 0; i < 2; i++)
+        {
+            m_gameRunningPlayerCurrentActionPointsBGImage.color = new Color(1f, 0.5f, 0.5f);
+            yield return new WaitForSeconds(0.1f);
+
+            m_gameRunningPlayerCurrentActionPointsBGImage.color = originalColor;
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 }

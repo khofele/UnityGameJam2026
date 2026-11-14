@@ -11,10 +11,9 @@ public class MainMenuUI : MonoBehaviour
     [Space(15)]
     [SerializeField] private TMP_InputField m_inputField;
     [SerializeField] private Image m_backgroundImage;
-    private bool m_bLuckyNumberIsSet = false;
     public void OnNewGameButtonPressed()
     {
-        if (m_bLuckyNumberIsSet)
+        if (GameManager.Instance.LuckyNumber != 0)
         {
             if (GameManager.Instance != null)
                 GameManager.Instance.LoadScene((int)Scenes.Level1);
@@ -46,7 +45,6 @@ public class MainMenuUI : MonoBehaviour
                 if (GameManager.Instance != null)
                 {
                     GameManager.Instance.SetLuckyNumber(luckyNumber);
-                    m_bLuckyNumberIsSet = true;
                 }
             }
             else

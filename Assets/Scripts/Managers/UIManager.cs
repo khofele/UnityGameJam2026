@@ -28,6 +28,7 @@ public class UIManager : Manager<UIManager>
     [SerializeField] private TextMeshProUGUI m_gameRunningPlayerCurrentActionPointsText;
     [SerializeField] private Image m_gameRunningPlayerCurrentActionPointsBGImage;
     [SerializeField] private Button m_endTurnButton;
+    [SerializeField] private Button m_leaveLevelButton;
     [Space(15)]
     [Header("------ Game Paused ------")]
     [SerializeField] private GameObject m_pauseMenu;
@@ -50,7 +51,9 @@ public class UIManager : Manager<UIManager>
     [SerializeField] private TextMeshProUGUI m_enemyOORWarningText;
     [SerializeField] private Button m_attackButton;
     //[SerializeField] private TextMeshProUGUI m_playerEnemyCurrentActionPointsText;
-
+    [Space(15)]
+    [Header("------ Health Potion ------")]
+    [SerializeField] private Button m_drinkHealthPotionButton;
     private void Start()
     {
         m_kevinID = Shader.PropertyToID("_kevin");
@@ -114,6 +117,7 @@ public class UIManager : Manager<UIManager>
     }
     public void OnMainMenuButtonPressed()//int vom button bekommen?
     {
+        GameManager.Instance.SetState(GameStates.RUNNING);
         GameManager.Instance.LoadScene((int)Scenes.MainMenu);
     }
     public void OnQuitGameButtonPressed()
@@ -285,17 +289,45 @@ public class UIManager : Manager<UIManager>
     {
         m_playerHPDisplayText.text = _hp.ToString();
     }
-    private IEnumerator BlinkError()
+    public void ShowHealthPotion(HealthPotionCollect _potion)
     {
-        Color originalColor = m_gameRunningPlayerCurrentActionPointsBGImage.color;
-
-        for (int i = 0; i < 2; i++)
+        m_drinkHealthPotionButton.gameObject.SetActive(true);
+        m_drinkHealthPotionButton.onClick.RemoveAllListeners();
+        m_drinkHealthPotionButton.onClick.AddListener(() =>
         {
-            m_gameRunningPlayerCurrentActionPointsBGImage.color = new Color(1f, 0.5f, 0.5f);
-            yield return new WaitForSeconds(0.1f);
+            m_player.Heal(_potion.Amount);
+            Destroy(_potion.gameObject);
+            UpdatePlayerHPDisplay(m_player.CurrentHealth);
+        });
+    }
+    public void ClearHealthPotion()
+    {
+        m_drinkHealthPotionButton.gameObject.SetActive(false);
+        m_drinkHealthPotionButton.onClick.RemoveAllListeners();
+    }
+    public void ShowLeaveLevelButton()
+    {
+        m_leaveLevelButton.gameObject.SetActive(true);
+        StartCoroutine(BlinkError(m_leaveLevelButton.gameObject, 15));
+    }
+    public void OnLeaveLevelButtonPressed()
+    {
+        GameManager.Instance.LoadScene((int)Scenes.Tutorial);
+    }
+    private IEnumerator BlinkError(GameObject _go, int _blinks = 2)
+    {
+        if (_go.TryGetComponent(out Image img))
+        {
+            Color originalColor = img.color;
 
-            m_gameRunningPlayerCurrentActionPointsBGImage.color = originalColor;
-            yield return new WaitForSeconds(0.1f);
+            for (int i = 0; i < _blinks; i++)
+            {
+                img.color = new Color(1f, 0.5f, 0.5f);
+                yield return new WaitForSeconds(0.1f);
+
+                img.color = originalColor;
+                yield return new WaitForSeconds(0.1f);
+            }
         }
     }
 }

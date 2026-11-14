@@ -99,6 +99,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3456310138177354134}
+  - component: {fileID: 8042344017827396386}
+  - component: {fileID: 3542213683775973987}
   m_Layer: 0
   m_Name: healingpotion3
   m_TagString: Untagged
@@ -125,6 +127,44 @@ Transform:
   - {fileID: 282451135333814096}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &8042344017827396386
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2415492554694003916}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.28
+  m_Height: 0.8
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.06, z: 0}
+--- !u!114 &3542213683775973987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2415492554694003916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd3f61a3f57f4744aba96089b10b90aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &3369089109809976521
 GameObject:
   m_ObjectHideFlags: 0

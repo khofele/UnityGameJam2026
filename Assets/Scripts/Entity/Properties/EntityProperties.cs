@@ -10,6 +10,8 @@ public class EntityProperties : ScriptableObject
     [SerializeField] private int m_minActionPoints = 0;
     [SerializeField] private int m_maxActionPoints = 0;
     [SerializeField] private float m_maxHealth = 100.0f;
+    //Hier auf max damage und min damage --- ist noch im levelManager
+
 
     [Header("Entity Actions")]
     [SerializeField] private List<EntityAction> m_entityActions = null;

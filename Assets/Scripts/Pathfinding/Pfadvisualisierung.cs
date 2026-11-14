@@ -14,7 +14,7 @@ public class Pfadvisualisierung : MonoBehaviour
     [SerializeField] private Material matF;
     [SerializeField] private Material m_gradientMaterial;
 
-    private void Start()
+    private void Awake()
     {
         if (m_line == null && TryGetComponent(out LineRenderer l))
         {
@@ -101,7 +101,7 @@ public class Pfadvisualisierung : MonoBehaviour
     {
         float percentage = (float)(_currentAP - 1) / (_pathNumberOfNodes - 1);
         percentage = Mathf.Clamp01(percentage);
-        Debug.Log("Colorgrading Path Visualization: " + percentage);
+        //Debug.Log("Colorgrading Path Visualization: " + percentage);
 
         Gradient gradient = new();
         GradientAlphaKey[] alphaKeys = new GradientAlphaKey[]

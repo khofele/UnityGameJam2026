@@ -4,6 +4,7 @@ using UnityEngine;
 public class EntityPlayer : Entity
 {
     private PlayerMovement m_playerMovement;
+    public PlayerMovement PlayerMovement {  get { return m_playerMovement; } }
     private void Start()
     {
         if (TryGetComponent(out PlayerMovement pm))
@@ -29,8 +30,10 @@ public class EntityPlayer : Entity
         if (m_currentHealth <= 0.0f)
         {
             m_isAlive = false;
+            AnimController.SetDeathTrigger();
             GameManager.Instance.SetState(GameStates.GAMEOVER);
         }
+        AnimController.SetHitTrigger();
     }
 
     protected override void HandleMovementChange(bool _isMoving)

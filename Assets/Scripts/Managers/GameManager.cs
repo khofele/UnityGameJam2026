@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,7 +7,7 @@ public class GameManager : Manager<GameManager>
 {
     //[SerializeField] private LevelManager m_levelManager = null;
 
-    public int LuckyNumber {  get; private set; }
+    public int LuckyNumber { get; private set; } = 1;
 
     private GameStates m_currentGameState = GameStates.PAUSED;
 
@@ -50,11 +50,16 @@ public class GameManager : Manager<GameManager>
         if (_newGameState == GameStates.GAMEOVER)
         {
             // TODO implement
+            StartCoroutine(GameOverTimer());
             return;
         }
     }
 
-
+    private IEnumerator GameOverTimer()
+    {
+        yield return new WaitForSeconds(2);
+        LoadScene((int)Scenes.GameOver);
+    }
 
     //SceneManagement & Application
     public void LoadScene(int sceneindex)

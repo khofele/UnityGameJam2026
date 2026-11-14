@@ -9,7 +9,8 @@ public abstract class Entity : MonoBehaviour
     protected int m_currentActionsPoints = 0;
     protected bool m_isAlive = true;
 
-    private EntityAnimController m_animController;
+    protected EntityAnimController m_animController;
+    [HideInInspector] public EntityAnimController AnimController { get { return m_animController; } }
     private bool m_isEntitiesTurn = false; // TODO im Levelmanager setzen
                                            // TODO Nodegraph resetten nach Ende der Runde
 
@@ -49,7 +50,7 @@ public abstract class Entity : MonoBehaviour
         m_kinematics.Position = transform.position;
         m_kinematics.Rotation = transform.eulerAngles.y * Mathf.Deg2Rad;
 
-        m_currentNodePos = gameObject.transform.position;
+        m_currentNodePos = new(gameObject.transform.position.x, gameObject.transform.position.z);
     }
 
     protected void TriggerOnAllActionPointsUsedEvent()
@@ -61,7 +62,7 @@ public abstract class Entity : MonoBehaviour
 
     public abstract void ReduceActionPoints(int _actionPoints);
 
-    //DEBUG
+    //DEBUG --- is used for lucky number increase
     public void SetActionPointsTo(int _actionPoints)
     {
         m_currentActionsPoints = _actionPoints;
@@ -92,6 +93,10 @@ public abstract class Entity : MonoBehaviour
     {
         get { return m_currentNodePos; }
     }
+    public Vector2 PrevNodePos
+    {
+        get { return m_prevNodePos; }
+    }
 
     //public bool IsMoving { get; private set; }
 
@@ -108,7 +113,7 @@ public abstract class Entity : MonoBehaviour
     public void SetSteeringBehaviour(eSteeringBehaviour _newBehaviour, Path _path = null)
     {
         m_currentSteeringBehaviour = _newBehaviour;
-        Debug.Log("Setting Steering Behaviour to " + m_currentSteeringBehaviour);
+        //Debug.Log("Setting Steering Behaviour to " + m_currentSteeringBehaviour);
 
         switch (m_currentSteeringBehaviour)
         {
@@ -119,6 +124,13 @@ public abstract class Entity : MonoBehaviour
                 {
                     if (_path.GetSize() > m_currentActionsPoints + 1)
                         _path.CutPath(m_currentActionsPoints + 1);
+                    if (this is EntityPlayer)
+                    {
+                        ReduceActionPoints(_path.GetSize() - 1);
+                        UIManager.Instance.UpdateCurrentAPText(m_currentActionsPoints);
+                    }
+                    GraphManager.Instance.SetNodeZustand(m_currentNodePos, true);
+                    GraphManager.Instance.SetNodeZustand(m_prevNodePos, true);
                     m_steering = new SBgrapplinghooksKin(_path); //oder statt new einen start/stop trigger setzen??
                     m_steering.OnMovementStateChanged += HandleMovementChange;
                     if (_path.GetSize() > 1)
@@ -127,10 +139,12 @@ public abstract class Entity : MonoBehaviour
                             m_prevNodePos = m_currentNodePos;
                         else
                             m_prevNodePos = _path.GetNodeAt(_path.GetSize() - 2).Position;
-                        m_currentNodePos = _path.GetNodeAt(_path.GetSize() - 1).Position;//path hat länge 0
+                        m_currentNodePos = _path.GetNodeAt(_path.GetSize() - 1).Position;//fehler wenn path hat länge 0
                     }
+                    GraphManager.Instance.SetNodeZustand(m_currentNodePos, false);
+                    GraphManager.Instance.SetNodeZustand(m_prevNodePos, false);
                 }
-                else Debug.Log("Pfad ist null");
+                //else Debug.Log("Pfad ist null");
                 break;
         }
         m_steering?.SetKinematic(m_kinematics);
@@ -177,6 +191,18 @@ public abstract class Entity : MonoBehaviour
         ReduceActionPoints(_chosenAction.ActionCost);
 
         return true;
+    }
+
+    public void TurnTowardsTarget(Vector2 _pos)//funktioniert nicht
+    {
+        Vector2 direction = _pos - m_currentNodePos;
+        if(direction.sqrMagnitude > 0.0001f)
+        {
+            float targetAngle = Mathf.Atan2(direction.x, direction.y);
+            m_kinematics.Rotation = targetAngle;//sofortiger sprung ---> später in eigenem SteeringBehaviour
+            //wird nur gebraucht wenn levelManager tick nur auf m_currentEntity aufruft
+            //transform.SetPositionAndRotation(m_kinematics.Position, Quaternion.Euler(0f, m_kinematics.Rotation * Mathf.Rad2Deg, 0f));
+        }
     }
 }
 public enum eSteeringBehaviour { None, GrapplinghooksKin}

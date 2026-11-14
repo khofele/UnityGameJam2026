@@ -25,7 +25,7 @@ public abstract class Pfadfindungsalgorithmus
             m_path.AddNodeToPath(itZiel.ThisNode);
         }
         m_path.ReversePath();
-        Debug.Log("Pfad berechnet");
+        //Debug.Log("Pfad berechnet");
         return m_path;
     }
 }

@@ -31,11 +31,13 @@ public class SBgrapplinghooksKin : SteeringBehaviourKin
             if (m_indexCurrentTarget < m_path.GetSize() - 1)
             {
                 m_indexCurrentTarget++;
-                Debug.Log("Zeues Ziel Index: " + m_indexCurrentTarget);
+                //Debug.Log("Zeues Ziel Index: " + m_indexCurrentTarget);
+                //Debug.Log("Zielposition: " + m_path.GetNodeAt(m_indexCurrentTarget).Position);
             }
             else
             {
                 Debug.Log("Angekommen");
+                Debug.Log("Walked " + (m_path.GetSize() - 1) + " Nodes far");
                 Pausieren();
                 return Vector3.zero; //damit velocity sicher 0 und IsMoving schaltet sich aus
                 //Drop Behaviour

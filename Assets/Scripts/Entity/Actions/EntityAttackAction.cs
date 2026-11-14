@@ -12,9 +12,10 @@ public class EntityAttackAction : EntityAction
 
     public override bool CanExecuteAction(EntityActionContext _actionContext)
     {
-        int distance = Mathf.Abs(Mathf.RoundToInt(_actionContext.ExecutingEntity.CurrentNodePos.x - _actionContext.TargetEntity.CurrentNodePos.x)) + Mathf.Abs(Mathf.RoundToInt(_actionContext.ExecutingEntity.CurrentNodePos.y - _actionContext.TargetEntity.CurrentNodePos.y));
+        //int distance = Mathf.Abs(Mathf.RoundToInt(_actionContext.ExecutingEntity.CurrentNodePos.x - _actionContext.TargetEntity.CurrentNodePos.x)) + Mathf.Abs(Mathf.RoundToInt(_actionContext.ExecutingEntity.CurrentNodePos.y - _actionContext.TargetEntity.CurrentNodePos.y));
+        float distance = (_actionContext.ExecutingEntity.CurrentNodePos - _actionContext.TargetEntity.CurrentNodePos).magnitude;
 
-        if(distance == 1)
+        if(distance <= LevelManager.Instance.AttackReach)
         {
             return true;
         }
@@ -26,6 +27,7 @@ public class EntityAttackAction : EntityAction
 
     public override void ExecuteAction(EntityActionContext _actionContext)
     {
-        _actionContext.TargetEntity.TakeDamage(m_damage);
+        //_actionContext.TargetEntity.TakeDamage(m_damage);//Lenny Pfusch hoffentlich funktionierts
+        LevelManager.Instance.ConfirmEntityAttack(_actionContext.ExecutingEntity, _actionContext.TargetEntity, LevelManager.Instance.RollDamage(false));
     }
 }

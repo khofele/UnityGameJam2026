@@ -100,7 +100,7 @@ public class LevelManager : Manager<LevelManager>
 
     private void NextRound()
     {
-        if (m_roundCounter > m_maxRoundCounter)
+        if (m_roundCounter > m_maxRoundCounter && GameManager.Instance.CurrentGameState != GameStates.GAMEWON)
         {
             foreach (Entity entity in m_levelEntities)
             {

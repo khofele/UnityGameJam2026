@@ -28,6 +28,7 @@ public class UIManager : Manager<UIManager>
     [SerializeField] private TextMeshProUGUI m_gameRunningPlayerCurrentActionPointsText;
     [SerializeField] private Image m_gameRunningPlayerCurrentActionPointsBGImage;
     [SerializeField] private Button m_endTurnButton;
+    [SerializeField] private Button m_leaveLevelButton;
     [Space(15)]
     [Header("------ Game Paused ------")]
     [SerializeField] private GameObject m_pauseMenu;
@@ -285,17 +286,29 @@ public class UIManager : Manager<UIManager>
     {
         m_playerHPDisplayText.text = _hp.ToString();
     }
-    private IEnumerator BlinkError()
+    public void ShowLeaveLevelButton()
     {
-        Color originalColor = m_gameRunningPlayerCurrentActionPointsBGImage.color;
-
-        for (int i = 0; i < 2; i++)
+        m_leaveLevelButton.gameObject.SetActive(true);
+        StartCoroutine(BlinkError(m_leaveLevelButton.gameObject, 15));
+    }
+    public void OnLeaveLevelButtonPressed()
+    {
+        GameManager.Instance.LoadScene((int)Scenes.Tutorial);
+    }
+    private IEnumerator BlinkError(GameObject _go, int _blinks = 2)
+    {
+        if (_go.TryGetComponent(out Image img))
         {
-            m_gameRunningPlayerCurrentActionPointsBGImage.color = new Color(1f, 0.5f, 0.5f);
-            yield return new WaitForSeconds(0.1f);
+            Color originalColor = img.color;
 
-            m_gameRunningPlayerCurrentActionPointsBGImage.color = originalColor;
-            yield return new WaitForSeconds(0.1f);
+            for (int i = 0; i < _blinks; i++)
+            {
+                img.color = new Color(1f, 0.5f, 0.5f);
+                yield return new WaitForSeconds(0.1f);
+
+                img.color = originalColor;
+                yield return new WaitForSeconds(0.1f);
+            }
         }
     }
 }

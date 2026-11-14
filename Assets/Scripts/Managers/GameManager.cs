@@ -44,6 +44,7 @@ public class GameManager : Manager<GameManager>
         if (_newGameState == GameStates.GAMEWON)
         {
             // TODO implement
+            UIManager.Instance.ShowLeaveLevelButton();
             return;
         }
 
@@ -88,4 +89,4 @@ public class GameManager : Manager<GameManager>
         LuckyNumber = number;
     }
 }
-public enum Scenes { MainMenu, Tutorial ,Level1, GameOver}
+public enum Scenes { MainMenu, Tutorial ,Level1, GameOver, GameWon}

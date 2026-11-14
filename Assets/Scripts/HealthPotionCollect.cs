@@ -33,10 +33,13 @@ public class HealthPotionCollect : MonoBehaviour
             UIManager.Instance.ClearHealthPotion();
             m_isInReach = false;
         }
-        m_time += Time.deltaTime;
-        if (m_time >= 2 * Mathf.PI) m_time -= 2 * Mathf.PI;
-        float NewY = m_startY + Mathf.Sin(m_time * m_speed) * m_height; //Time.time
-        transform.localPosition = new Vector3(transform.localPosition.x, NewY, transform.localPosition.z);
+        m_time += Time.deltaTime * m_speed;
+        if (m_time >= 2f * Mathf.PI)
+        {
+            m_time -= 2f * Mathf.PI;
+        }
+        float yOffset = ((Mathf.Sin(m_time) + 1f) / 2f) * m_height;
+        transform.position = new Vector3(transform.position.x, m_startY + yOffset, transform.position.z);
     }
     //private void OnTriggerEnter(Collider other)
     //{

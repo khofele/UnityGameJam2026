@@ -314,12 +314,13 @@ public class UIManager : Manager<UIManager>
     }
     public void ShowLeaveLevelButton()
     {
+        Debug.Log("ShowingButton");
         m_leaveLevelButton.gameObject.SetActive(true);
-        StartCoroutine(BlinkError(m_leaveLevelButton.gameObject, 150));
+        StartCoroutine(BlinkError(m_leaveLevelButton.gameObject, 50));
     }
     public void OnLeaveLevelButtonPressed()
     {
-        GameManager.Instance.LoadScene((int)Scenes.Tutorial);
+        GameManager.Instance.LoadScene((int)Scenes.GameWon);
     }
     private IEnumerator BlinkError(GameObject _go, int _blinks = 2)
     {

@@ -25,8 +25,10 @@ public class EntityPlayer : Entity
     public void Heal(float _amount)
     {
         m_currentHealth += _amount;
-        if (m_currentHealth > 100)
-            m_currentHealth = 100;
+
+        //Nina und Ronja wollen overheal
+        //if (m_currentHealth > 100)
+        //    m_currentHealth = 100;
     }
     public override void TakeDamage(float _damageValue)
     {

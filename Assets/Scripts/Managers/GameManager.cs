@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -41,9 +40,10 @@ public class GameManager : Manager<GameManager>
             return;
         }
 
-        if (_newGameState == GameStates.GAMEWON)
+        if (_newGameState == GameStates.GAMEWON)//TODO funktioniert nicht?
         {
             // TODO implement
+            Debug.Log("TellingUItoShowButton");//Debug wird nicht (immer) ausgegeben
             UIManager.Instance.ShowLeaveLevelButton();
             return;
         }
@@ -65,6 +65,7 @@ public class GameManager : Manager<GameManager>
     //SceneManagement & Application
     public void LoadScene(int sceneindex)
     {
+        if (sceneindex > SceneManager.sceneCountInBuildSettings - 1 || sceneindex < 0) return;
         SceneManager.LoadScene(sceneindex);
         DestroyOtherManagers();
     }

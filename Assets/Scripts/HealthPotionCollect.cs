@@ -3,7 +3,9 @@ using UnityEngine;
 public class HealthPotionCollect : MonoBehaviour
 {
     //[SerializeField] private LayerMask m_LayerMask;
-    public float Amount {  get; private set; }
+    public int Amount {  get; private set; }
+    [SerializeField] private int m_minAmount = 10;
+    [SerializeField] private int m_maxAmount = 30;
     private EntityPlayer m_player;
     private Vector2 m_position2;
     private bool m_isInReach = false;
@@ -16,7 +18,7 @@ public class HealthPotionCollect : MonoBehaviour
     private float m_time = 0.0f;
     private void Start()
     {
-        Amount = Random.value * 5f + 0.5f;
+        Amount = Random.Range(m_minAmount, m_maxAmount);
         m_position2 = new(transform.position.x, transform.position.z);
         m_player = UIManager.Instance.Player;
         m_startY = transform.localPosition.y;

@@ -101,7 +101,7 @@ public class LevelManager : Manager<LevelManager>
 
     private void NextRound()
     {
-        if (m_roundCounter > m_maxRoundCounter && GameManager.Instance.CurrentGameState != GameStates.GAMEWON)
+        if (m_roundCounter > m_maxRoundCounter) //&& GameManager.Instance.CurrentGameState != GameStates.GAMEWON)
         {
             foreach (Entity entity in m_levelEntities)
             {
@@ -250,6 +250,7 @@ public class LevelManager : Manager<LevelManager>
         }
 
         GameManager.Instance.SetState(GameStates.GAMEWON);
+        UIManager.Instance.ShowLeaveLevelButton();//TODO gescheit fixen, so nur provisorisch weil GameManager nicht richtig macht
     }
 
     public void HandlePlayerTurnEnd()
@@ -288,7 +289,7 @@ public class LevelManager : Manager<LevelManager>
         _attackedEntity.TakeDamage(_damage);
         if (_attackedEntity.TryGetComponent(out EntityPlayer _player)) UIManager.Instance.UpdatePlayerHPDisplay(_player.CurrentHealth);
     }
-    private IEnumerator EnemyDeath(EntityEnemy _enemy)
+    private IEnumerator EnemyDeath(EntityEnemy _enemy)//TODO move to EnemyEntity Script
     {
         yield return new WaitForSeconds(5f);
         GraphManager.Instance.SetNodeZustand(_enemy.CurrentNodePos, true);

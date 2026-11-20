@@ -195,6 +195,26 @@ public partial class @CamMoveAndClick_Actions: IInputActionCollection2, IDisposa
                     ""interactions"": """",
                     ""initialStateCheck"": true,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""PanDelta"",
+                    ""type"": ""Value"",
+                    ""id"": ""a0008131-970b-4bcf-b462-62b18e7fbe89"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""ClickHold"",
+                    ""type"": ""Button"",
+                    ""id"": ""e5e92386-fd58-49be-bd39-65227b684cb2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -211,12 +231,34 @@ public partial class @CamMoveAndClick_Actions: IInputActionCollection2, IDisposa
                 },
                 {
                     ""name"": """",
+                    ""id"": ""ca42293c-8cc9-42f7-960f-cc73c3c3de2d"",
+                    ""path"": ""<Pointer>/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ClickHold"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""38bb1b05-a5c1-4855-92d3-b780e2b72bad"",
                     ""path"": ""<Pointer>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""PointerPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aa22bf1d-35d8-437e-8ae5-43143c21417c"",
+                    ""path"": ""<Pointer>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PanDelta"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -232,6 +274,8 @@ public partial class @CamMoveAndClick_Actions: IInputActionCollection2, IDisposa
         m_ClickActions = asset.FindActionMap("ClickActions", throwIfNotFound: true);
         m_ClickActions_Click = m_ClickActions.FindAction("Click", throwIfNotFound: true);
         m_ClickActions_PointerPosition = m_ClickActions.FindAction("PointerPosition", throwIfNotFound: true);
+        m_ClickActions_PanDelta = m_ClickActions.FindAction("PanDelta", throwIfNotFound: true);
+        m_ClickActions_ClickHold = m_ClickActions.FindAction("ClickHold", throwIfNotFound: true);
     }
 
     ~@CamMoveAndClick_Actions()
@@ -411,6 +455,8 @@ public partial class @CamMoveAndClick_Actions: IInputActionCollection2, IDisposa
     private List<IClickActionsActions> m_ClickActionsActionsCallbackInterfaces = new List<IClickActionsActions>();
     private readonly InputAction m_ClickActions_Click;
     private readonly InputAction m_ClickActions_PointerPosition;
+    private readonly InputAction m_ClickActions_PanDelta;
+    private readonly InputAction m_ClickActions_ClickHold;
     /// <summary>
     /// Provides access to input actions defined in input action map "ClickActions".
     /// </summary>
@@ -430,6 +476,14 @@ public partial class @CamMoveAndClick_Actions: IInputActionCollection2, IDisposa
         /// Provides access to the underlying input action "ClickActions/PointerPosition".
         /// </summary>
         public InputAction @PointerPosition => m_Wrapper.m_ClickActions_PointerPosition;
+        /// <summary>
+        /// Provides access to the underlying input action "ClickActions/PanDelta".
+        /// </summary>
+        public InputAction @PanDelta => m_Wrapper.m_ClickActions_PanDelta;
+        /// <summary>
+        /// Provides access to the underlying input action "ClickActions/ClickHold".
+        /// </summary>
+        public InputAction @ClickHold => m_Wrapper.m_ClickActions_ClickHold;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -462,6 +516,12 @@ public partial class @CamMoveAndClick_Actions: IInputActionCollection2, IDisposa
             @PointerPosition.started += instance.OnPointerPosition;
             @PointerPosition.performed += instance.OnPointerPosition;
             @PointerPosition.canceled += instance.OnPointerPosition;
+            @PanDelta.started += instance.OnPanDelta;
+            @PanDelta.performed += instance.OnPanDelta;
+            @PanDelta.canceled += instance.OnPanDelta;
+            @ClickHold.started += instance.OnClickHold;
+            @ClickHold.performed += instance.OnClickHold;
+            @ClickHold.canceled += instance.OnClickHold;
         }
 
         /// <summary>
@@ -479,6 +539,12 @@ public partial class @CamMoveAndClick_Actions: IInputActionCollection2, IDisposa
             @PointerPosition.started -= instance.OnPointerPosition;
             @PointerPosition.performed -= instance.OnPointerPosition;
             @PointerPosition.canceled -= instance.OnPointerPosition;
+            @PanDelta.started -= instance.OnPanDelta;
+            @PanDelta.performed -= instance.OnPanDelta;
+            @PanDelta.canceled -= instance.OnPanDelta;
+            @ClickHold.started -= instance.OnClickHold;
+            @ClickHold.performed -= instance.OnClickHold;
+            @ClickHold.canceled -= instance.OnClickHold;
         }
 
         /// <summary>
@@ -548,5 +614,19 @@ public partial class @CamMoveAndClick_Actions: IInputActionCollection2, IDisposa
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnPointerPosition(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PanDelta" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPanDelta(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ClickHold" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnClickHold(InputAction.CallbackContext context);
     }
 }

@@ -12,7 +12,9 @@ public class CamMovement : MonoBehaviour
     [SerializeField] private float m_angleVer = 0f;
     [SerializeField] private GameObject m_spielfeld;
 
-    [SerializeField] private InputActionReference camMov;
+    [SerializeField] private InputActionReference camMovWASD;
+    [SerializeField] private InputActionReference camMovPointerDelta;
+    [SerializeField] private InputActionReference camMovClickHold;
     private Vector2 camVector;
     
 
@@ -28,7 +30,17 @@ public class CamMovement : MonoBehaviour
 
     private void Update()
     {
-        camVector = camMov.action.ReadValue<Vector2>();
+        camVector = camMovWASD.action.ReadValue<Vector2>();
+
+        if (camMovClickHold.action.IsPressed()/*)*/ && camVector == Vector2.zero)
+        {
+            camVector = camMovPointerDelta.action.ReadValue<Vector2>();
+        }
+        
+        if (camVector.magnitude > 1f)
+        {
+            camVector.Normalize();
+        }
 
         m_angleHor -= m_rotation * Time.deltaTime * camVector.x;
         if (m_angleVer - m_rotation * Time.deltaTime > 45 && camVector.y < 0)
@@ -53,11 +65,15 @@ public class CamMovement : MonoBehaviour
 
     private void OnEnable()
     {
-        camMov.action.Enable();
+        camMovWASD.action.Enable();
+        camMovPointerDelta.action.Enable();
+        camMovClickHold.action.Enable();
     }
     private void OnDisable()
     {
-        camMov.action.Disable();
+        camMovWASD.action.Disable();
+        camMovPointerDelta.action.Disable();
+        camMovClickHold.action.Disable();
     }
 }
 //es w�r nice to have, wenn die Kamera bei einem steileren winkel auch weiter weg ist, oder FOV halt anpassen

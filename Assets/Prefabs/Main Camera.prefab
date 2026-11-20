@@ -156,4 +156,6 @@ MonoBehaviour:
   m_rotation: 200
   m_angleVer: 0
   m_spielfeld: {fileID: 0}
-  camMov: {fileID: -3195837859317867427, guid: d6fb5ce46497b8d418ef3a8555bc0d12, type: 3}
+  camMovWASD: {fileID: -3195837859317867427, guid: d6fb5ce46497b8d418ef3a8555bc0d12, type: 3}
+  camMovPointerDelta: {fileID: -579163793740930944, guid: d6fb5ce46497b8d418ef3a8555bc0d12, type: 3}
+  camMovClickHold: {fileID: 5300815171816878955, guid: d6fb5ce46497b8d418ef3a8555bc0d12, type: 3}

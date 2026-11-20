@@ -435,6 +435,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: room5_One
       objectReference: {fileID: 0}
+    - target: {fileID: 8208870203631407838, guid: fa5c8e3616e2090409572a4a6e1485d9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1623,8 +1627,8 @@ MonoBehaviour:
   m_levelEntities:
   - {fileID: 1207548288}
   - {fileID: 2128516306}
-  - {fileID: 1282741981}
   - {fileID: 521907647}
+  - {fileID: 1282741981}
   m_maxRoundCounter: 20
   m_luckyNumber: 5
   PlayerCanCalculatePath: 1
@@ -26625,19 +26629,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 979214109237453047, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 979214109237453047, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 979214109237453047, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 979214109237453047, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 990302814751491137, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
       propertyPath: m_Name
       value: MenuUICanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 4364673425857800124, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5785585630764624911, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
       propertyPath: m_pf
@@ -26656,6 +26668,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1294127471}
     - target: {fileID: 6055000806060789459, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6879007467516515560, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
@@ -26738,6 +26754,10 @@ PrefabInstance:
     - target: {fileID: 7496730958523760617, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7565276416296479760, guid: 47e8d17f1d7ca0c4bbaa581f0b00ceba, type: 3}
+      propertyPath: m_ScreenMatchMode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

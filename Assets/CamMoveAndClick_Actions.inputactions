@@ -109,6 +109,26 @@
                     "interactions": "",
                     "initialStateCheck": true,
                     "priority": 0
+                },
+                {
+                    "name": "PanDelta",
+                    "type": "Value",
+                    "id": "a0008131-970b-4bcf-b462-62b18e7fbe89",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
+                },
+                {
+                    "name": "ClickHold",
+                    "type": "Button",
+                    "id": "e5e92386-fd58-49be-bd39-65227b684cb2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -125,12 +145,34 @@
                 },
                 {
                     "name": "",
+                    "id": "ca42293c-8cc9-42f7-960f-cc73c3c3de2d",
+                    "path": "<Pointer>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ClickHold",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "38bb1b05-a5c1-4855-92d3-b780e2b72bad",
                     "path": "<Pointer>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "PointerPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aa22bf1d-35d8-437e-8ae5-43143c21417c",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PanDelta",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
